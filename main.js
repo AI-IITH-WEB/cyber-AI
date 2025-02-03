@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 8,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                      icon: 'assets/phaseicon1.svg'
                 },
                 {
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 8,
-                    instructor: 'Dr. Clement',
+                    instructor: 'CyberAI Professionals',
                      icon: 'assets/phaseicon2.svg'
                 }
             ]
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                     ],
                     totalHours: 6,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/IDSphaseicon.svg'
                 },
                 {
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 3,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/iotphaseicon.svg'
                 },
                 {
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 4,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/anamolyphaseicon.svg',
                 },
                 {
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 3,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/phaseicon1.svg',
                 },
                 {
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 3,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/biometricphaseicon.svg'
                 },
                 {
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 3,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/vulnerabilityphaseicon.svg'
                 },
                 {
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 1,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/supplyphaseicon.svg'
                 },
                 {
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 1,
-                    instructor: 'IITH AI',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/implementationphaseicon.svg'
                 }
             ]
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 3,
-                    instructor: 'Naresh & Saby',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/adversialphaseicon.svg'
                 },
                 {
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 2,
-                    instructor: 'Naresh & Saby',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/datapoisioningphaseicon.svg'
                 },
                 {
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 2,
-                    instructor: 'Naresh & Saby',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/modelphaseicon.svg'
                 },
                 {
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 3,
-                    instructor: 'Naresh, Saby & Clement',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/advncedphaseicon.svg'
                 }
             ]
@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 6,
-                    instructor: 'Naresh & Saby',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/differentialphaseicon.svg'
                 },
                 {
@@ -418,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 6,
-                    instructor: 'Naresh & Saby',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/federatedphaseicon.svg'
                 },
                 {
@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 2,
-                    instructor: 'Naresh & Saby',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/robustphaseicon.svg'
                 },
                 {
@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ],
                     totalHours: 4,
-                    instructor: 'Naresh & Saby',
+                    instructor: 'CyberAI Professionals',
                     icon: 'assets/adversialphaseicon2.svg'
                 }
             ]
