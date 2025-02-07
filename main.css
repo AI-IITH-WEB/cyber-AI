@@ -11,10 +11,13 @@
     scroll-behavior: smooth;
 }
 
-body {
+html,body {
     font-family: 'Ruda', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
 }
 
 .container {
@@ -111,6 +114,9 @@ body {
 
 .contact-btn:hover {
     background-color: #ff836f;
+}
+.mobile-only {
+  display: none;
 }
 
 /* Hero Section Styles */
@@ -1582,16 +1588,14 @@ sub {
   .container {
       padding: 0 15px;
   }
-
-  /* Navbar Adjustments */
   .navbar {
       height: 10rem;
       padding: 10px 0;
   }
   .main-container{
-    margin-top: 7rem;
+    margin-top: 5rem;
     height: auto;
-    width: 74rem;
+    width: auto;
     padding: 10px 0;
   }
 
@@ -1722,16 +1726,20 @@ sub {
 
   /* Footer Adjustments */
   .footer{
-    width: 74rem;
+    width: auto;
   }
   .footer-content {
       flex-direction: row;
       gap: 30px;
+      min-width: 100px;
   }
 
   .footer-brand,
   .footer-contact {
       max-width: 100%;
+  }
+  .copyright{
+    margin-right: 0px;
   }
 
   .footer-bottom {
@@ -1743,8 +1751,405 @@ sub {
   .course-container{
     flex-direction: column;
   }
-  
+  .navbar {
+    height: auto;
+    padding: 10px 0;
+    }
+
+    .nav-links {
+        display: none; 
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hamburger {
+        display: flex; 
+    }
+    .nav-links.active {
+      display: flex;
+    }
+    .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    }
+
+    .nav-links a {
+    display: block;
+    padding: 10px;
+    }
+    .desktop-only{
+      display: none;
+    }
+    .footer-content{
+      min-width: 100px;
+    }
+    .footer{
+      width: auto;
+    }
+    .footer-bottom{
+      gap: 15rem;
+    }
+      
 }
+/* Mobile Responsive Media Queries */
+@media (max-width: 600px) {
+  .container, .course-container, .navcontainer {
+      padding: 0 10px;
+  }
+  .main-container{
+    margin-top: 3rem;
+    height: auto;
+    width: auto;
+    padding: 10px 0;
+  }
+  .hero{
+    padding-top: 0px;
+  }
 
+  .navbar {
+      height: auto;
+      padding: 10px 0;
+  }
 
+  .nav-links {
+      display: none; 
+      flex-direction: column;
+      gap: 10px;
+  }
 
+  .hamburger {
+      display: flex; 
+  }
+  .nav-links .active {
+    display: flex;
+    }
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      background-color: #FFFFFF;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 10px;
+    }
+    .logo{
+      width: 10rem;
+    }
+
+  .contact-btn {
+    width: auto;
+    padding: 8px 14px;
+    height: 40px;
+    margin-top: 0px;
+  }
+
+  /* Hero Section Adjustments */
+  .hero-content {
+      grid-template-columns: 1fr;
+      padding-top: 60px;
+  }
+
+  .hero-text h1 {
+      font-size: 1.5rem;
+  }
+
+  .hero-text p {
+      font-size: 0.9rem;
+  }
+
+  .cta-buttons {
+      gap: 10px;
+  }
+  .herosubpart img{
+    width: 10rem;
+  }
+
+  .herosub {
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  /* Overlap Cards Adjustments */
+  .card-wrapper {
+      flex-direction: column;
+      gap: 40px;
+  }
+
+  .overlapcard {
+      width: 100%;
+  }
+  .overlapcard-number{
+    width: 54px;
+    height: 54px;
+  }
+
+  /* Course Offerings Adjustments */
+  .course-offerings {
+      flex-direction: column;
+      padding: 0.1rem;
+  }
+  .course-content{
+    width: auto;
+  }
+
+  .phases {
+      gap: 10px;
+      width: auto;
+  }
+  .section-header h2{
+    font-size: 1.5rem;
+  }
+  .section-header p{
+    font-size: 0.9rem;
+  }
+  .icon-box{
+    right: 12px;
+  }
+  .course-module{
+    width: auto;
+    padding: 0.4rem;
+  }
+  .module-content{
+    padding: 0px;
+  }
+  .course-modules h3{
+    font-size: 0.8rem;
+  }
+  .topic-content{
+    font-size: 0.8rem;
+  }
+  .modal-content p{
+    font-size: 12px;
+  }
+
+  .phase {
+      width: auto;
+  }
+
+  .countdown-card {
+    max-height: 80rem;
+    width: auto;
+    padding: 1rem;
+  }
+  .countdown-card p{
+    font-size: 1rem;
+  }
+  .countdown-card h3{
+    font-size: 1.5rem;
+  }
+  .program-features::before{
+    z-index: -1;
+  }
+  .skills h2{
+    font-size: 1.5rem;
+  }
+  .skills-grid{
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0px;
+  }
+  .skill-item span:last-child{
+    font-size: 10px;
+
+  }
+
+  /* Program Features Adjustments */
+  .features-grid-special {
+      grid-template-columns: 1fr;
+  }
+
+  .feature-card-special {
+      grid-column: span 1 !important;
+  }
+  .feature-card-special p{
+    font-size: 0.9rem;
+    line-height: 2;
+  }
+
+  /* Benefits Section Adjustments */
+  .benefits-content {
+      grid-template-columns: 1fr;
+  }
+
+  .benefits-text h2 {
+      font-size: 1.5rem;
+  }
+  .benefits-text p{
+    font-size: 1rem;
+  }
+
+  .company-logos {
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+
+  /* Certification Section Adjustments */
+  .certification-content {
+      grid-template-columns: 1fr;
+  }
+
+  .certification-text h2 {
+      font-size: 2rem;
+  }
+
+  /* Program Fee Section Adjustments */
+  .program-fee h2{
+    font-size: 20px;
+  }
+  .fee-schedule-grid {
+      grid-template-columns: 1fr;
+  }
+  .fee-box h4 {
+    font-size: 1.4rem;
+  }
+  .rupee{
+    font-size: 3rem;
+  }
+  .amount{
+    font-size: 3rem;
+  }
+
+  .vertical-divider {
+      display: none;
+  }
+
+  .fee-box {
+      width: 100%;
+  }
+  .fee-structure h3{
+    font-size: 20px;
+  }
+  .fee-points li{
+  font-size: 12px;
+  }
+  .schedule-illustration{
+    opacity: 0.5;
+  }
+  .faqs h2 {
+    font-size: 1.5rem;
+  }
+
+  .faq-columns {
+      flex-direction: column;
+      gap: 0px;
+  }
+  .faq-question h3 {
+    font-size: 1rem;
+  }
+
+  .faq-list {
+      width: 100%;
+  }
+  .footer{
+    width: auto;
+  }
+  .footer-brand{
+    max-width: 14rem;
+  }
+  .footer-contact {
+    max-width: 14rem;
+  }
+  .footer-content {
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+  }
+  .footer-bottom {
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+  }
+  .copyright{
+    margin-right: 6px;
+  }
+}
+@media (max-width: 400px) {
+  .hero-text h1 {
+    font-size: 1rem;
+  }
+  .hero-text p {
+    font-size: 0.87rem;
+  }
+  .btn{
+    padding: 10px 15px;
+  }
+  .overlapcard h3 {
+    font-size: 16px;
+  }
+  .section-header h2{
+    font-size: 1rem;
+  }
+  .phases{
+    flex-direction: row;
+  }
+  .countdown-card h3{
+    font-size: 1.5rem;
+  }
+  .benefits-text h2{
+    font-size: 1rem;
+  }
+  .benefits-text p{
+    font-size: 0.87rem;
+  }
+  .skills h2{
+    font-size: 1rem;
+  }
+  .fee-box h4{
+    font-size: 1.4rem;
+  }
+  .rupee{
+    font-size: 3rem;
+  }
+  .amount{
+    font-size: 3rem;
+  }
+  .faq-question h3{
+    font-size: 1rem;
+  }
+  .faq-item.active .faq-question h3{
+    font-size: 1rem;
+  }
+  .contact-btn {
+    width: auto;
+    padding: 8px 14px;
+    height: 40px;
+    margin-top: 0px;
+  }
+  .faq-columns{
+    gap: 0px;
+  }
+}
+@media (max-width: 320px){
+  .phases{
+    width: 18rem;
+  }
+  .course-modules{
+    width: 18rem;
+  }
+  .countdown-card{
+    width: 18rem;
+  }
+  .register-btn{
+    width: 260px;
+  }
+  .contact-btn {
+    width: auto;
+    padding: 2px 7px;
+    height: 34px;
+    margin-top: 0px;
+    font-size: x-small;
+  }
+}

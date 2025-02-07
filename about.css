@@ -832,7 +832,6 @@ html {
   .navcontainer{
     padding: 0;
   }
-
   .nav-links {
     gap: 0.20rem;
   }
@@ -855,7 +854,3 @@ html {
     z-index: -1;
   }
 }
-
-
-
-

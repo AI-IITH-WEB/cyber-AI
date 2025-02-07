@@ -9,6 +9,10 @@
 //     });
 //   });
 
+function toggleMenu() {
+    document.querySelector('.nav-links').classList.toggle('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const phases = document.querySelectorAll('.phase');
     const courseModulesContainer = document.querySelector('.course-modules');
