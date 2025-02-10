@@ -92,18 +92,24 @@ html {
   white-space: nowrap; 
 }
 .hamburger {
-  display: none; 
+  display: none;
   flex-direction: column;
-  gap: 5px;
   cursor: pointer;
 }
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #424242;
+  margin: 4px 0;
+  transition: 0.4s;
+}
 
-.hamburger span {
+/* .hamburger span {
   width: 25px;
   height: 3px;
   background-color: #424242;
   transition: all 0.3s ease;
-}
+} */
 
 .nav-link:hover {
   color: #F2644C;
@@ -784,10 +790,55 @@ html {
     margin-top: 1rem;
   }
 }
+@media (max-width: 600px){
+  .navbar {
+    height: auto;
+    padding: 10px 0;
+}
+
+  .nav-links {
+      display: none; 
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  .hamburger {
+      display: flex; 
+  }
+  .nav-links.active {
+    display: flex;
+    }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 10px;
+  }
+  .logo{
+    width: 10rem;
+  }
+
+  .contact-btn {
+    width: auto;
+    padding: 8px 14px;
+    height: 40px;
+    margin-top: 0px;
+  }
+}
 
 /* Responsive Styles for Screens Less Than 480px */
 @media (max-width: 480px) {
-  .navbar {
+  /* .navbar {
     padding: 5px 0;
   }
   .navcontainer{
@@ -800,11 +851,14 @@ html {
 
   .nav-link {
     font-size: 0.4rem; 
-  }
-  .logo{
+  } */
+  .hamburger {
+    display: flex; 
+}
+  /* .logo{
     width: 90px;
     margin-top: 0.6rem;
-  }
+  } */
 
   .contact-btn {
     font-size: 0.6rem; 
@@ -826,7 +880,7 @@ html {
   }
 }
 @media (max-width: 420px) {
-  .navbar {
+  /* .navbar {
     padding: 5px 0;
   }
   .navcontainer{
@@ -849,7 +903,7 @@ html {
     padding: 4px 8px; 
     width: 50px; 
     height: 30px; 
-  }
+  } */
   .iit-section::before{
     z-index: -1;
   }
