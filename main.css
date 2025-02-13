@@ -1500,7 +1500,7 @@ sub {
     flex-direction: row;
     justify-content: center;
     align-items: center; 
-    gap: 60rem; 
+    gap: 70rem; 
     color: var(--text-color); 
   }
   
@@ -1579,7 +1579,7 @@ sub {
     }
   
     .footer-bottom {
-      gap: 30rem; 
+      gap: 35rem; 
     }
 }
 

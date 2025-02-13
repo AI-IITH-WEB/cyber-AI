@@ -867,7 +867,7 @@ html {
     height: 30px; 
   }
   .hero{
-    margin-top: 1rem;
+    margin-top: 2rem;
   }
   .iit-section::before{
     z-index: -1;
