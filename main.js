@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ],
                     totalHours: 8,
                     instructor: 'CyberAI Professionals',
-                     icon: 'assets/phaseicon1.svg'
+                    icon: 'assets/phaseicon1.svg'
                 },
                 {
                     title: 'Cybersecurity Fundamentals - ',
