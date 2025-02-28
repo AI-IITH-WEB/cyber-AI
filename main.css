@@ -1776,7 +1776,7 @@ sub {
 }
 @media (max-width: 800px) {
   .vertical-divider1{
-    display: none;
+    display: none !important;
   }
   .hero-content{
     flex-direction: column;
