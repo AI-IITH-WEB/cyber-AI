@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             document.getElementById("header-container").innerHTML = data;
             updateNavLinks(); 
+            hideApplyButton();
         })
         .catch(error => console.error("Error loading header:", error));
 
@@ -22,4 +23,15 @@ function updateNavLinks() {
             link.href = link.href.replace("index.html#", "#");
         }
     });
+}
+
+function hideApplyButton() {
+    if (window.location.pathname.includes("register.html")) {
+        setTimeout(() => {
+            const applyButton = document.querySelector(".contact-btn");
+            if (applyButton) {
+                applyButton.style.visibility = "hidden";
+            }
+        }, 200); 
+    }
 }
