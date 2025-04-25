@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You - Cyber AI</title>
+  <link rel="icon" type="image/png" href="assets/favicon1.png">
+  <link rel="stylesheet" href="about.css" />
+  <script src="nav.js" defer></script>
+  <script src="main.js" defer></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .thankyou-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8rem 1rem 4rem; /* Add top padding to offset fixed navbar */
+      background: #ffffff;
+    }
+
+    .thankyou-popup {
+      background: #fff;
+      padding: 3rem;
+      max-width: 500px;
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .thankyou-popup h1 {
+      color: #F2644C;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .thankyou-popup p {
+      color: #666;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .thankyou-popup .home-btn {
+      padding: 12px 24px;
+      background-color: #F2644C;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+    }
+
+    .thankyou-popup .home-btn:hover {
+      background-color: #ff836f;
+    }
+
+    @media (max-width: 600px) {
+      .thankyou-popup {
+        padding: 2rem 1.5rem;
+      }
+
+      .thankyou-popup h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <div class="thankyou-wrapper">
+    <div class="thankyou-popup">
+      <h1>Thank You for Enrolling!</h1>
+      <p>Your submission has been received. Our team will get in touch with you soon.</p>
+      <a href="./index.html" class="home-btn">Back to Home</a>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+</body>
+</html>
