@@ -26,16 +26,16 @@ function updateNavLinks() {
 }
 
 function hideApplyButton() {
-    if (
-      window.location.pathname.includes("register.html") ||
-      window.location.pathname.includes("thankyou.html")
-    ) {
-      setTimeout(() => {
-        const applyButton = document.querySelector(".contact-btn");
-        if (applyButton) {
-          applyButton.style.visibility = "hidden";
-        }
-      }, 200);
-    }
+  if (
+    window.location.pathname.includes("register.html") ||
+    window.location.pathname.includes("thankyou.html") ||
+    window.location.pathname.includes("thankyou-enroll.html")
+  ) {
+    setTimeout(() => {
+      const applyButton = document.querySelector(".contact-btn");
+      if (applyButton) {
+        applyButton.style.visibility = "hidden";
+      }
+    }, 200);
   }
-  
+}
