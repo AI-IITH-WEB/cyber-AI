@@ -175,7 +175,19 @@ html {
 .content-text{
   width: min(979px, 100%);
 }
+.certificate-image-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+}
 
+.certificate-image {
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
 .content-text h2 {
   color: var(--text-dark);
   margin-bottom: var(--spacing-md);
