@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const phases = document.querySelectorAll('.phase');
     const courseModulesContainer = document.querySelector('.course-modules');
     const moduleHeadings = document.querySelectorAll('.course-modules h3');
+    if (!courseModulesContainer || phases.length === 0) return;
     const phaseContent = {
         1: {
             modules: [
@@ -541,24 +542,39 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('videoModal');
     const videoImage = document.getElementById('videoImage');
-    const closeBtn = document.querySelector('.close');
+    if (!modal || !videoImage) return;
+
+    const closeBtn = modal.querySelector('.close') || modal.querySelector('.video-close-btn');
     const videoIframe = document.getElementById('videoIframe');
+    const videoUrl = videoIframe ? (videoIframe.getAttribute('data-src') || videoIframe.src || "https://www.youtube.com/embed/4eFwOGjI5BQ") : "";
 
-    const videoUrl = "/"; 
     videoImage.addEventListener('click', () => {
-        modal.style.display = 'block';
-        videoIframe.src = videoUrl; 
+        modal.style.display = 'flex';
+        if (videoIframe && videoUrl) {
+            videoIframe.src = videoUrl;
+        }
     });
 
-    closeBtn.addEventListener('click', () => {
+    function closeVideo() {
         modal.style.display = 'none';
-        videoIframe.src = ""; 
-    });
+        if (videoIframe) {
+            videoIframe.src = "";
+        }
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeVideo);
+    }
 
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
-            modal.style.display = 'none';
-            videoIframe.src = ""; 
+            closeVideo();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && (modal.style.display === 'flex' || modal.style.display === 'block')) {
+            closeVideo();
         }
     });
 });
@@ -585,3 +601,183 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+// Successful Learners — Load More
+document.addEventListener('DOMContentLoaded', function() {
+    const loadMoreBtn = document.getElementById('loadMoreLearners');
+    if (!loadMoreBtn) return;
+
+    loadMoreBtn.addEventListener('click', function() {
+        const hiddenCards = document.querySelectorAll('.learner-card.hidden');
+        const batchSize = 5;
+        let revealed = 0;
+
+        hiddenCards.forEach(function(card) {
+            if (revealed < batchSize) {
+                card.classList.remove('hidden');
+                revealed++;
+            }
+        });
+
+        // Check if any hidden cards remain
+        const remaining = document.querySelectorAll('.learner-card.hidden');
+        if (remaining.length === 0) {
+            loadMoreBtn.style.display = 'none';
+        }
+    });
+});
+
+// Alumni Stories — Dot Slider Navigation
+document.addEventListener('DOMContentLoaded', function() {
+    const storiesTrack = document.getElementById('storiesTrack');
+    const dots = document.querySelectorAll('.story-dot');
+    if (!storiesTrack || dots.length === 0) return;
+
+    let currentSlide = 0;
+
+    function getCardsPerSlide() {
+        const viewportWidth = window.innerWidth;
+        if (viewportWidth <= 800) return 1;
+        if (viewportWidth <= 1200) return 2;
+        return 3;
+    }
+
+    function goToSlide(slideIndex) {
+        const cardsPerSlide = getCardsPerSlide();
+        const cards = storiesTrack.querySelectorAll('.story-card');
+        if (cards.length === 0) return;
+
+        const card = cards[0];
+        const cardStyle = window.getComputedStyle(card);
+        const cardWidth = card.offsetWidth;
+        const gap = parseInt(window.getComputedStyle(storiesTrack).gap) || 24;
+
+        const offset = slideIndex * cardsPerSlide * (cardWidth + gap);
+        storiesTrack.style.transform = 'translateX(-' + offset + 'px)';
+
+        currentSlide = slideIndex;
+
+        // Update active dot
+        dots.forEach(function(dot) {
+            dot.classList.remove('active');
+        });
+        dots[slideIndex].classList.add('active');
+    }
+
+    dots.forEach(function(dot, index) {
+        dot.addEventListener('click', function() {
+            goToSlide(index);
+        });
+    });
+
+    // Recalculate on window resize
+    window.addEventListener('resize', function() {
+        goToSlide(currentSlide);
+    });
+});
+
+// Alumni Stories — Video Modal Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const videoThumbnails = document.querySelectorAll('.video-thumbnail');
+    const storyVideoModal = document.getElementById('storyVideoModal');
+    const closeStoryModal = document.getElementById('closeStoryModal');
+    const storyVideoPlayer = document.getElementById('storyVideoPlayer');
+
+    if (!storyVideoModal || !storyVideoPlayer) return;
+
+    // Open modal on click
+    videoThumbnails.forEach(function(thumbnail) {
+        thumbnail.addEventListener('click', function() {
+            const videoSrc = thumbnail.getAttribute('data-video-src');
+            if (videoSrc) {
+                // Set the video source
+                storyVideoPlayer.querySelector('source').src = videoSrc;
+                storyVideoPlayer.load(); // Reload video element with new source
+                
+                // Show modal as flex for centering
+                storyVideoModal.style.display = 'flex';
+                
+                // Autoplay video when modal opens
+                storyVideoPlayer.play().catch(function() {
+                    // Autoplay was prevented; controls are still visible for user
+                });
+            }
+        });
+    });
+
+    // Close modal function
+    function closeVideoModal() {
+        storyVideoModal.style.display = 'none';
+        storyVideoPlayer.pause(); // Stop playing when closed
+        storyVideoPlayer.currentTime = 0; // Reset video to start
+    }
+
+    // Close when X is clicked
+    if (closeStoryModal) {
+        closeStoryModal.addEventListener('click', closeVideoModal);
+    }
+
+    // Close when clicking outside modal content
+    window.addEventListener('click', function(event) {
+        if (event.target === storyVideoModal) {
+            closeVideoModal();
+        }
+    });
+
+    // Close on Escape key press
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && (storyVideoModal.style.display === 'flex' || storyVideoModal.style.display === 'block')) {
+            closeVideoModal();
+        }
+    });
+});
+
+// Successful Learners — Image Popup Modal Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const learnerCards = document.querySelectorAll('.learner-card');
+    const learnerImageModal = document.getElementById('learnerImageModal');
+    const closeLearnerModal = document.getElementById('closeLearnerModal');
+    const learnerModalImg = document.getElementById('learnerModalImg');
+
+    if (!learnerImageModal || !learnerModalImg) return;
+
+    learnerCards.forEach(function(card) {
+        const imgWrapper = card.querySelector('.learner-img-wrapper');
+        const img = card.querySelector('.learner-img-wrapper img');
+        const targetElement = imgWrapper || img;
+
+        if (targetElement && img) {
+            targetElement.addEventListener('click', function() {
+                const imgSrc = img.getAttribute('src');
+                const imgAlt = img.getAttribute('alt') || 'Learner Preview';
+                if (imgSrc) {
+                    learnerModalImg.src = imgSrc;
+                    learnerModalImg.alt = imgAlt;
+                    learnerImageModal.style.display = 'flex';
+                }
+            });
+        }
+    });
+
+    function closeImgModal() {
+        learnerImageModal.style.display = 'none';
+        learnerModalImg.src = '';
+    }
+
+    if (closeLearnerModal) {
+        closeLearnerModal.addEventListener('click', closeImgModal);
+    }
+
+    window.addEventListener('click', function(event) {
+        if (event.target === learnerImageModal) {
+            closeImgModal();
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && (learnerImageModal.style.display === 'flex' || learnerImageModal.style.display === 'block')) {
+            closeImgModal();
+        }
+    });
+});
+

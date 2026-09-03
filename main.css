@@ -79,7 +79,7 @@ html,body {
     color: #424242;
     font-weight: 500;
     text-decoration: none;
-    font-size: 1.0625rem; 
+    font-size: 1rem; 
     transition: color 0.3s ease;
     white-space: nowrap; 
 }
@@ -108,8 +108,8 @@ html,body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 165.45px;
-    height: 52.87px;
+    /* width: 165.45px;
+    height: 52.87px; */
 }
 
 .contact-btn:hover {
@@ -330,12 +330,13 @@ html,body {
 .close {
   color: #aaa;
   float: right;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
   cursor: pointer;
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 2px;
+  top: -2px;
+  line-height: 1;
 }
 
 .close:hover,
@@ -1182,9 +1183,16 @@ sub {
   
   .fee-structure h3,
   .schedule h3 {
-    font-size: 24px;
+    font-size: 18px;
     color: #F2644C;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
+  }
+
+  .schedule h3.tbd-bold {
+    font-weight: 700;
+    font-size: 26px;
+    z-index: 100;
+    margin-bottom: 12px;
   }
   
   .fee-points {
@@ -1228,7 +1236,7 @@ sub {
     margin-bottom: 10px;
 }
   .fee-box h4 {
-    font-size: 1.68rem;
+    font-size: 1.48rem;
     margin-top: 10px;
     
   }
@@ -1246,7 +1254,7 @@ sub {
   }
   
   .amount {
-    font-size: 3.25rem;
+    font-size: 2rem;
     font-weight: bold;
     display: flex;
   }
@@ -1322,13 +1330,454 @@ sub {
      position: absolute;     
      bottom: 0;     
      right: 0;     
-     max-width: 800px;       
+     max-width: 400px;  
+     z-index: 10;     
   }     
  .schedule-illustration img {    
-    width: 700px;    
-    height: 511px;   
+    width: 400px;    
+    height: 411px;   
+    z-index: -1;  
  }  
-  /* FAQ Section */
+  /* Successful Learners Section */
+  .successful-learners {
+    padding: 80px 0;
+    background-color: #f6f6f6;
+    position: relative;
+  }
+
+  .successful-learners h2 {
+    font-size: 3.6rem;
+    color: #424242;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.125rem;
+    color: #424242;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .learners-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 2rem;
+  }
+
+  .learner-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .learner-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+  }
+
+  .learner-card.hidden {
+    display: none;
+  }
+
+  .learner-img-wrapper {
+    padding: 12px 12px 0 12px;
+    cursor: pointer;
+  }
+
+  .learner-img-wrapper img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    background-color: #e8e8e8;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .learner-img-wrapper:hover img {
+    transform: scale(1.02);
+  }
+
+  /* Glassmorphic Modals (Learner Images & Videos) */
+  .learner-modal,
+  .video-modal {
+    display: none;
+    position: fixed;
+    z-index: 1100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 14, 20, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    animation: modalFadeIn 0.25s ease;
+  }
+
+  @keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .learner-modal-dialog,
+  .video-modal-dialog {
+    position: relative;
+    background: transparent;
+    padding: 0;
+    margin: auto;
+    max-width: 92vw;
+    max-height: 90vh;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .learner-modal-img {
+    max-width: 90vw;
+    max-height: 84vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  .video-modal-dialog video,
+  #storyVideoPlayer {
+    max-width: 880px;
+    width: 90vw;
+    max-height: 84vh;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    display: block;
+    outline: none;
+    background: #000;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  .video-modal-dialog iframe,
+  #videoIframe {
+    max-width: 880px;
+    width: 90vw;
+    max-height: 84vh;
+    aspect-ratio: 16 / 9;
+    height: 495px;
+    border-radius: 12px;
+    display: block;
+    border: none;
+    outline: none;
+    background: #000;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  .learner-close-btn,
+  .video-close-btn {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 38px;
+    height: 38px;
+    background: rgba(26, 26, 26, 0.85);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-family: inherit;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, color 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .learner-close-btn:hover,
+  .learner-close-btn:focus,
+  .video-close-btn:hover,
+  .video-close-btn:focus {
+    background: #F2644C;
+    border-color: #F2644C;
+    color: #ffffff;
+    transform: scale(1.1);
+    outline: none;
+  }
+
+  @media (max-width: 600px) {
+    .learner-modal,
+    .video-modal {
+      padding: 12px;
+    }
+    .learner-modal-img,
+    .video-modal-dialog video,
+    #storyVideoPlayer,
+    .video-modal-dialog iframe,
+    #videoIframe {
+      max-width: 94vw;
+      max-height: 80vh;
+      border-radius: 8px;
+    }
+    .video-modal-dialog iframe,
+    #videoIframe {
+      height: 240px;
+    }
+    .learner-close-btn,
+    .video-close-btn {
+      top: 8px;
+      right: 8px;
+      width: 34px;
+      height: 34px;
+      font-size: 20px;
+      background: rgba(20, 20, 24, 0.9);
+    }
+  }
+
+  .learner-info {
+    padding: 14px 14px 18px 14px;
+  }
+
+  .learner-name {
+    color: #F2644C;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+  }
+
+  .learner-role {
+    color: #999;
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .load-more-wrapper {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .load-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #F2644C;
+    color: #F2644C;
+    background: transparent;
+    border-radius: 20px;
+    padding: 10px 28px;
+    font-size: 1rem;
+    font-family: 'Ruda', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .load-more-btn:hover {
+    background-color: #F2644C;
+    color: #fff;
+  }
+
+  .load-more-btn span {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  /* Alumni Stories Section */
+  .alumni-stories {
+    padding: 25px 0;
+    background-color: #f6f6f6;
+    position: relative;
+  }
+
+  .alumni-stories h2 {
+    font-size: 3.6rem;
+    color: #424242;
+    margin-bottom: 0.5rem;
+  }
+
+  .stories-slider-wrapper {
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+
+  .stories-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 24px;
+  }
+
+  .story-card {
+    min-width: calc(33.333% - 16px);
+    max-width: calc(33.333% - 16px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: box-shadow 0.3s ease;
+    padding: 24px;
+  }
+
+  .story-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .video-thumbnail {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .video-thumbnail img,
+  .video-thumbnail video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background-color: #e8e8e8;
+    transition: transform 0.3s ease;
+  }
+
+  .video-thumbnail:hover img,
+  .video-thumbnail:hover video {
+    transform: scale(1.03);
+  }
+
+  .play-btn-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .play-btn-circle {
+    width: 48px;
+    height: 48px;
+    background: rgba(59, 130, 246, 0.85);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+
+  .video-thumbnail:hover .play-btn-circle {
+    transform: scale(1.1);
+    background: rgba(59, 130, 246, 1);
+  }
+
+  .play-icon {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-left: 3px;
+  }
+
+  .story-content {
+    padding: 20px 0 0 0;
+  }
+
+  .story-quote {
+    color: #424242;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0 0 16px 0;
+    font-style: normal;
+  }
+
+  .story-divider {
+    height: 1px;
+    background-color: #222530;
+    margin-bottom: 16px;
+  }
+
+  .story-person {
+    padding: 0;
+  }
+
+  .person-name {
+    color: #F2644C;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 2px 0;
+  }
+
+  .person-title {
+    color: #666;
+    font-size: 0.8rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .person-company {
+    color: #999;
+    font-size: 0.8rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .stories-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 0.5rem;
+  }
+
+  .story-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #94a3b8;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .story-dot:hover {
+    transform: scale(1.1);
+  }
+
+  .story-dot.active {
+    width: 18px;
+    height: 18px;
+    border-color: #94a3b8;
+  }
+
+  .story-dot.active::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #F2644C;
+    border-radius: 50%;
+  }
+
+   /* FAQ Section */
 .faqs {
     padding: 80px 0;
     background-color: #fff;
@@ -1743,6 +2192,22 @@ sub {
       width: 100%;
   }
 
+  /* Successful Learners Adjustments */
+  .learners-grid {
+      grid-template-columns: repeat(4, 1fr);
+  }
+
+  .successful-learners h2,
+  .alumni-stories h2 {
+      font-size: 2.8rem;
+  }
+
+  /* Alumni Stories Adjustments */
+  .story-card {
+      min-width: calc(50% - 12px);
+      max-width: calc(50% - 12px);
+  }
+
   /* FAQ Section Adjustments */
   /* .faq-columns {
       flex-direction: column;
@@ -1829,6 +2294,22 @@ sub {
     }
     .footer-bottom{
       gap: 15rem;
+    }
+
+    /* Successful Learners Adjustments */
+    .learners-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    /* Alumni Stories Adjustments */
+    .story-card {
+        min-width: calc(100% - 0px);
+        max-width: calc(100% - 0px);
+    }
+
+    .stories-track {
+        gap: 16px;
     }
       
 }
@@ -2109,6 +2590,62 @@ sub {
   .copyright{
     margin-right: 6px;
   }
+
+  /* Successful Learners Adjustments */
+  .successful-learners {
+    padding: 40px 0;
+  }
+  .successful-learners h2,
+  .alumni-stories h2 {
+    font-size: 1.5rem;
+  }
+  .section-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  .learners-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .learner-name {
+    font-size: 0.85rem;
+  }
+  .learner-role {
+    font-size: 0.75rem;
+  }
+  .load-more-btn {
+    font-size: 0.85rem;
+    padding: 8px 20px;
+  }
+
+  /* Alumni Stories Adjustments */
+  .alumni-stories {
+    padding: 40px 0;
+  }
+  .story-card {
+    min-width: calc(100% - 0px);
+    max-width: calc(100% - 0px);
+  }
+  .stories-track {
+    gap: 12px;
+  }
+  .story-quote {
+    font-size: 0.85rem;
+  }
+  .person-name {
+    font-size: 0.85rem;
+  }
+  .person-title,
+  .person-company {
+    font-size: 0.75rem;
+  }
+  .play-btn-circle {
+    width: 40px;
+    height: 40px;
+  }
+  .play-icon {
+    font-size: 0.9rem;
+  }
 }
 @media (max-width: 400px) {
   .hero-text h1 {
@@ -2185,6 +2722,22 @@ sub {
     height: 34px;
     margin-top: 0px;
     font-size: x-small;
+  }
+
+  /* Successful Learners Adjustments */
+  .successful-learners h2,
+  .alumni-stories h2 {
+    font-size: 1.2rem;
+  }
+  .learners-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .learner-img-wrapper {
+    padding: 8px 8px 0 8px;
+  }
+  .learner-info {
+    padding: 10px 8px 12px 8px;
   }
 }
 .enroll-fixed {
