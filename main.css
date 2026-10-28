@@ -438,10 +438,14 @@ iframe {
   .course-module {
     border: 1px solid #fdc0b9;
     border-radius: 8px;
-    padding: 1.5rem;
-    margin: 3.5rem 0;
+    margin: 0 0 2.5rem;
     position: relative;
     background-color: #FFFFFF;
+    overflow: hidden;
+  }
+
+  .course-module .module-content {
+    padding: 1.5rem;
   }
   .icon-box {
     position: absolute; 
@@ -473,41 +477,37 @@ iframe {
   
   .topic {
     display: flex;
+    align-items: flex-start;
     gap: 1rem;
     margin-bottom: 1rem;
   }
-  
+
+  .topic:last-child {
+    margin-bottom: 0;
+  }
+
+  .topic img {
+    margin-top: 5px;
+  }
+
   .topic-arrow {
     color: #ff6b5b;
   }
   .topic-content{
-    display: flex;
-    gap: 0.50rem;
+    display: block;
   }
-  
-  .topic-content h4 {
+
+  .topic-title {
     color: #F2644C;
-    margin-bottom: 0.25rem;
   }
-  
-  .topic-content p {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 0.25rem;
-  }
-  
-  .hours {
-    color: #F2644C;
-    font-size: 0.8rem;
-  }
-  
+
   .module-footer {
     display: flex;
     gap: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
-    color: #666;
-    font-size: 0.9rem;
+    padding: 1rem 1.5rem;
+    background-color: #f3f3f3;
+    color: #424242;
+    font-size: 0.85rem;
   }
   
   .test-skills {
@@ -598,7 +598,7 @@ iframe {
     background: #f7f3f3;
     position: relative;
     padding-bottom: 50px;
-    min-width: 547px;
+    min-width: 460px;
     max-height: 960px;
 }
 
@@ -623,6 +623,11 @@ iframe {
     margin: 20px 0;
 }
 
+.countdown-card .subtitle {
+    font-size: 1rem;
+    text-align: center;
+}
+
 .countdown-card .details {
     text-align: left;
     margin-top: 20px;
@@ -635,7 +640,7 @@ iframe {
 .clockcard {
     display: flex;
     align-items: center;
-    gap: 80px;
+    gap: 50px;
     padding: 10px;
 }
 
@@ -665,7 +670,7 @@ iframe {
 .subtitle {
     color: #666;
     font-size: 0.9rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.8rem;
 }
 
 .divider {
@@ -1216,11 +1221,31 @@ sub {
     left: 0;
     color: #ff6b6b;
   }
-  
+
+  .fee-points li strong {
+    color: #424242;
+  }
+
+  .fee-breakup {
+    margin-bottom: 16px;
+  }
+
+  .schedule-points {
+    position: relative;
+    z-index: 1;
+    max-width: 300px;
+    margin-top: 30px;
+  }
+
+  .schedule-label {
+    color: #F2644C;
+    font-weight: 500;
+  }
+
   .fee-note {
     color: #666;
     margin-bottom: 20px;
-    margin-top: 50px;
+    margin-top: 0;
   }
   
   .fee-box {
@@ -1260,12 +1285,12 @@ sub {
   }
   
   .gst {
-    font-size: 3rem;
+    font-size: 0.55em;
     opacity: 0.9;
-    left: 190px;
-    top: 2px;
     font-weight: bold;
-
+    align-self: flex-start;
+    margin-left: 8px;
+    line-height: 1;
   }
   
   .timeline {
@@ -2436,10 +2461,12 @@ sub {
   }
   .course-module{
     width: auto;
-    padding: 0.4rem;
   }
-  .module-content{
-    padding: 0px;
+  .course-module .module-content{
+    padding: 1rem;
+  }
+  .module-footer{
+    padding: 0.75rem 1rem;
   }
   .course-modules h3{
     font-size: 0.8rem;

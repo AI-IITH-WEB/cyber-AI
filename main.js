@@ -22,465 +22,177 @@ document.addEventListener('DOMContentLoaded', () => {
         1: {
             modules: [
                 {
-                    title: 'AI Fundamentals',
+                    title: 'Weekend 1 — LLM Fundamentals',
                     topics: [
                         {
-                            title: 'Machine Learning Basics - ',
-                            description: 'Understand ML types, training methods, feature engineering, metrics',
-                            hours: 2
+                            title: 'Tokens and inference',
+                            description: 'Token IDs, embeddings, training vs. inference...'
                         },
                         {
-                            title: 'Deep Learning Essentials - ',
-                            description: 'Master neural networks, activation functions, loss functions, optimization',
-                            hours: 2
+                            title: 'Attention and sequence context',
+                            description: 'Causal attention and positional information...'
                         },
                         {
-                            title: 'Advanced ML Concepts - ',
-                            description: 'Learn ensemble methods, transfer learning, DL architectures, evaluation',
-                            hours: 2
+                            title: 'Context windows and assembly',
+                            description: 'Token budgets, history and truncation...'
                         },
                         {
-                            title: 'AI Ethics and Bias - ',
-                            description: 'Understand fairness, bias detection, responsible AI, transparency',
-                            hours: 2
+                            title: 'Decoding and output variability',
+                            description: 'Greedy decoding, temperature and top-p...'
                         }
                     ],
-                    totalHours: 8,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/phaseicon1.svg'
+                    contactHours: 3,
+                    classMinutes: 45
                 },
                 {
-                    title: 'Cybersecurity Fundamentals - ',
+                    title: 'Weekend 2 — Prompt Engineering & System Prompts',
                     topics: [
                         {
-                            title: 'Network Security - ',
-                            description: 'Master TCP/IP, protocols, network architecture, traffic analysis',
-                            hours: 2
+                            title: 'Prompt roles and templates',
+                            description: 'Message roles and chat-template serialization...'
                         },
                         {
-                            title: 'Security Controls - ',
-                            description: 'Implement authentication, authorization, access control, policies',
-                            hours: 2
+                            title: 'Writing a testable system prompt',
+                            description: 'Task scope, format and evidence rules...'
                         },
                         {
-                            title: 'Threat Landscape - ',
-                            description: 'Identify attack types, threat actors, vectors, risk assessment',
-                            hours: 2
+                            title: 'Multi-turn context assembly',
+                            description: 'History, summaries and untrusted text...'
                         },
                         {
-                            title: 'Security Operations - ',
-                            description: 'Execute incident response, log analysis, monitoring, threat intel',
-                            hours: 2
+                            title: 'Instruction adherence evaluation',
+                            description: 'Repeatable tests and prompt-only limits...'
                         }
                     ],
-                    totalHours: 8,
-                    instructor: 'CyberAI Professionals',
-                     icon: 'assets/phaseicon2.svg'
+                    contactHours: 3,
+                    classMinutes: 45
                 }
             ]
         },
         2: {
             modules: [
                 {
-                    title: 'IDS',
+                    title: 'Weekend 3 — Trust Boundaries & Threat Modeling For AI',
                     topics: [
                         {
-                            title: 'ML-based IDS Architecture - ',
-                            description: 'Design ML-IDS architecture, implement detection systems',
-                            hours: 2
+                            title: 'Assets, actors and data flows',
+                            description: 'User, application, model provider, document store and tool service...'
                         },
                         {
-                            title: 'Real-time Detection Systems - ',
-                            description: 'Build real-time detection, optimize performance',
-                            hours: 2
+                            title: 'Locate trust boundaries',
+                            description: 'User text versus application instructions...'
                         },
                         {
-                            title: 'Hybrid Detection Approaches - ',
-                            description: 'Combine multiple detection methods, enhance accuracy',
-                            hours: 2
-                        },
-                    ],
-                    totalHours: 6,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/IDSphaseicon.svg'
-                },
-                {
-                    title: 'IoT Security',
-                    topics: [
-                        {
-                            title: 'Edge Device Protection - ',
-                            description: 'Secure IoT devices, implement edge protection',
-                            hours: 1
+                            title: 'Threat scenarios and OWASP',
+                            description: 'Attacker capability, entry point, precondition, undesired outcome...'
                         },
                         {
-                            title: 'Lightweight ML Models - ',
-                            description: 'Deploy efficient models, optimize for constraints',
-                            hours: 1
-                        },
-                        {
-                            title: 'Distributed Detection - ',
-                            description: 'Implement distributed security, coordinate detection',
-                            hours: 1
+                            title: 'Controls and residual risk',
+                            description: 'Least privilege, provenance, output validation, approval...'
                         }
                     ],
-                    totalHours: 3,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/iotphaseicon.svg'
+                    contactHours: 3,
+                    classMinutes: 45
                 },
                 {
-                    title: 'Anomaly Detection',
+                    title: 'Weekend 4 — RAG Architecture End To End',
                     topics: [
                         {
-                            title: 'Statistical Methods - ',
-                            description: 'Apply statistical anomaly detection methods',
-                            hours: 1
+                            title: 'Ingestion and chunking',
+                            description: 'Parsing, normalization, document identity, provenance, versions, chunk size...'
                         },
                         {
-                            title: 'Deep Learning Approaches - ',
-                            description: 'Implement DL-based anomaly detection',
-                            hours: 1
+                            title: 'Embeddings and vector storage',
+                            description: 'Embedding vectors, model/version consistency, cosine similarity...'
                         },
                         {
-                            title: 'Autoencoder-based Detection - ',
-                            description: 'Use autoencoders for anomaly detection',
-                            hours: 1
+                            title: 'Retrieval and context assembly',
+                            description: 'Top-k, metadata filters, optional reranking, deduplication...'
                         },
                         {
-                            title: 'Real-time Implementation - ',
-                            description: 'Deploy real-time anomaly detection systems',
-                            hours: 1
+                            title: 'Generation and evaluation',
+                            description: 'Grounded answers, citations, unsupported questions...'
                         }
                     ],
-                    totalHours: 4,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/anamolyphaseicon.svg',
-                },
-                {
-                    title: 'Behavior Analysis',
-                    topics: [
-                        {
-                            title: 'User Behavior Analytics - ',
-                            description: 'Profile user behavior, detect anomalies',
-                            hours: 1
-                        },
-                        {
-                            title: 'System Behavior Profiling - ',
-                            description: 'Monitor system behavior, identify patterns',
-                            hours: 1
-                        },
-                        {
-                            title: 'Network Behavior Analysis - ',
-                            description: 'Analyze network behavior, detect threats',
-                            hours: 1
-                        }
-                    ],
-                    totalHours: 3,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/phaseicon1.svg',
-                },
-                {
-                    title: 'Biometric Authentication',
-                    topics: [
-                        {
-                            title: 'Facial Recognition - ',
-                            description: 'Implement facial recognition systems',
-                            hours: 1
-                        },
-                        {
-                            title: 'Multimodal Biometrics - ',
-                            description: 'Combine multiple biometric factors',
-                            hours: 1
-                        },
-                        {
-                            title: 'Anti-spoofing Techniques - ',
-                            description: 'Prevent biometric spoofing attacks',
-                            hours: 1
-                        }
-                    ],
-                    totalHours: 3,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/biometricphaseicon.svg'
-                },
-                {
-                    title: 'Vulnerability Scanning',
-                    topics: [
-                        {
-                            title: 'ML-enhanced Scanning - ',
-                            description: 'Improve scanning with ML techniques',
-                            hours: 1
-                        },
-                        {
-                            title: 'Automated Assessment - ',
-                            description: 'Automate vulnerability assessment',
-                            hours: 1
-                        },
-                        {
-                            title: 'Risk Prioritization - ',
-                            description: 'Prioritize risks using ML methods',
-                            hours: 1
-                        }
-                    ],
-                    totalHours: 3,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/vulnerabilityphaseicon.svg'
-                },
-                {
-                    title: 'Supply Chain Attacks',
-                    topics: [
-                        {
-                            title: 'Software Supply Chain Attacks - ',
-                            description: 'Software Supply chain attacks and how to protect against them',
-                            hours: 1
-                        }
-                    ],
-                    totalHours: 1,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/supplyphaseicon.svg'
-                },
-                {
-                    title: 'Implementation',
-                    topics: [
-                        {
-                            title: 'Performance Optimization - ',
-                            description: 'Optimize system performance',
-                            hours: 1
-                        }
-                    ],
-                    totalHours: 1,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/implementationphaseicon.svg'
+                    contactHours: 3,
+                    classMinutes: 45
                 }
             ]
         },
         3: {
             modules: [
                 {
-                    title: 'Adversarial Attacks',
+                    title: 'Weekend 5 — Tool Use & Agentic Architectures',
                     topics: [
                         {
-                            title: 'White-box Attacks - ',
-                            description: 'Understand and implement white-box attacks',
-                            hours: 0.75
+                            title: 'Tool schemas and proposals',
+                            description: 'Function names, descriptions, JSON argument schemas, required fields...'
                         },
                         {
-                            title: 'Black-box Attacks - ',
-                            description: 'Master black-box attack techniques',
-                            hours: 0.75
+                            title: 'Dispatcher and result handling',
+                            description: 'Tool allow lists, argument validation, authorization hooks, request IDs...'
                         },
                         {
-                            title: 'Transfer Attacks - ',
-                            description: 'Execute transfer attack methods',
-                            hours: 0.75
+                            title: 'Agent loop and stopping',
+                            description: 'Observe, decide, call and resume; state tracking; retries; maximum steps...'
                         },
                         {
-                            title: 'Physical Attacks - ',
-                            description: 'Implement physical adversarial attacks',
-                            hours: 0.75
+                            title: 'Sandboxing and action approval',
+                            description: 'Filesystem and network scope, read versus write tools, previews...'
                         }
                     ],
-                    totalHours: 3,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/adversialphaseicon.svg'
+                    contactHours: 3,
+                    classMinutes: 45
                 },
                 {
-                    title: 'Data Poisoning',
+                    title: 'Weekend 6 — Auth, Permissions & Data Flow In AI Pipelines',
                     topics: [
                         {
-                            title: 'Training Data Poisoning - ',
-                            description: 'Understand training data poisoning',
-                            hours: 0.5
+                            title: 'Identity, sessions and credentials',
+                            description: 'Authentication versus authorization, session identity, service...'
                         },
                         {
-                            title: 'Label Flipping - ',
-                            description: 'Implement label flipping attacks',
-                            hours: 0.5
+                            title: 'Permission-aware retrieval',
+                            description: 'Tenant isolation, resource ownership, policy checks before context...'
                         },
                         {
-                            title: 'Backdoor Attacks - ',
-                            description: 'Execute backdoor attack techniques',
-                            hours: 0.5
+                            title: 'Confused deputy and tool permissions',
+                            description: 'A privileged app acting for a less-privileged user, capability...'
                         },
                         {
-                            title: 'Clean Label Attacks - ',
-                            description: 'Master clean label poisoning',
-                            hours: 0.5
+                            title: 'Data lifecycle and verification',
+                            description: 'Prompt and output logs, cache partitioning, redaction...'
                         }
                     ],
-                    totalHours: 2,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/datapoisioningphaseicon.svg'
-                },
-                {
-                    title: 'Model Extraction',
-                    topics: [
-                        {
-                            title: 'API-based Extraction - ',
-                            description: 'Extract models via API attacks',
-                            hours: 0.5
-                        },
-                        {
-                            title: 'Side-channel Attacks - ',
-                            description: 'Implement side-channel attacks',
-                            hours: 0.5
-                        },
-                        {
-                            title: 'Membership Inference - ',
-                            description: 'Execute membership inference attacks',
-                            hours: 0.5
-                        },
-                        {
-                            title: 'Architecture Reconstruction - ',
-                            description: 'Reconstruct model architectures',
-                            hours: 0.5
-                        }
-                    ],
-                    totalHours: 2,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/modelphaseicon.svg'
-                },
-                {
-                    title: 'Advanced Attacks',
-                    topics: [
-                        {
-                            title: 'Model Inversion - ',
-                            description: 'Implement model inversion attacks',
-                            hours: 0.75
-                        },
-                        {
-                            title: 'Distillation Attacks - ',
-                            description: 'Execute distillation attacks',
-                            hours: 0.75
-                        },
-                        {
-                            title: 'Trojan Attacks - ',
-                            description: 'Implement trojan attack methods',
-                            hours: 0.75
-                        },
-                        {
-                            title: 'Privacy Leakage - ',
-                            description: 'Understand privacy leakage attacks',
-                            hours: 0.75
-                        }
-                    ],
-                    totalHours: 3,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/advncedphaseicon.svg'
+                    contactHours: 3,
+                    classMinutes: 45
                 }
             ]
         },
         4: {
             modules: [
                 {
-                    title: 'Differential Privacy',
+                    title: 'Weekend 7 — Code Generation & Static Analysis Basics',
                     topics: [
                         {
-                            title: 'DP Fundamentals - ',
-                            description: 'Master DP concepts and mathematics',
-                            hours: 2
+                            title: 'Coding-assistant context',
+                            description: 'Open files, selected text, repository search, comments, README files and...'
                         },
                         {
-                            title: 'Privacy Budgeting - ',
-                            description: 'Implement privacy budget management',
-                            hours: 1
+                            title: 'Generated code and taint',
+                            description: 'Sources, propagation, sanitizers and sensitive sinks. Parameterized SQL...'
                         },
                         {
-                            title: 'DP-SGD Implementation - ',
-                            description: 'Deploy DP-SGD in practice',
-                            hours: 2
+                            title: 'Static analysis and tests',
+                            description: 'AST-based rules, data-flow/taint analysis, false positives, false negatives...'
                         },
                         {
-                            title: 'Privacy Analysis - ',
-                            description: 'Analyze privacy guarantees',
-                            hours: 1
+                            title: 'Integrated readiness exercise',
+                            description: 'Combine prompt provenance, RAG context, tool decisions, caller...'
                         }
                     ],
-                    totalHours: 6,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/differentialphaseicon.svg'
-                },
-                {
-                    title: 'Federated Learning',
-                    topics: [
-                        {
-                            title: 'FL Architecture - ',
-                            description: 'Design FL systems architecture',
-                            hours: 1
-                        },
-                        {
-                            title: 'Secure Aggregation - ',
-                            description: 'Implement secure aggregation protocols',
-                            hours: 2
-                        },
-                        {
-                            title: 'Cross-silo FL - ',
-                            description: 'Deploy cross-silo FL systems',
-                            hours: 1
-                        },
-                        {
-                            title: 'Privacy Guarantees - ',
-                            description: 'Ensure FL privacy guarantees',
-                            hours: 2
-                        }
-                    ],
-                    totalHours: 6,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/federatedphaseicon.svg'
-                },
-                {
-                    title: 'Robust Defenses',
-                    topics: [
-                        {
-                            title: 'Input Sanitization - ',
-                            description: 'Implement input sanitization methods',
-                            hours: 1
-                        },
-                        {
-                            title: 'Model Hardening - ',
-                            description: 'Apply model hardening techniques',
-                            hours: 1
-                        },
-                        {
-                            title: 'Certified Defenses - ',
-                            description: 'Deploy certified defense methods',
-                            hours: 1
-                        },
-                        {
-                            title: 'Detection Methods - ',
-                            description: 'Implement attack detection systems',
-                            hours: 1
-                        }
-                    ],
-                    totalHours: 2,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/robustphaseicon.svg'
-                },
-                {
-                    title: 'Adversarial Training',
-                    topics: [
-                        {
-                            title: 'PGD Training - ',
-                            description: 'Execute PGD adversarial training',
-                            hours: 1
-                        },
-                        {
-                            title: 'Ensemble Training - ',
-                            description: 'Implement ensemble defenses',
-                            hours: 1
-                        },
-                        {
-                            title: 'Verification Methods - ',
-                            description: 'Apply verification techniques',
-                            hours: 1
-                        },
-                        {
-                            title: 'Robustness Evaluation -',
-                            description: 'Evaluate model robustness',
-                            hours: 1
-                        }
-                    ],
-                    totalHours: 4,
-                    instructor: 'CyberAI Professionals',
-                    icon: 'assets/adversialphaseicon2.svg'
+                    contactHours: 3,
+                    classMinutes: 45
                 }
             ]
         }
@@ -499,22 +211,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateContent(content) {
         courseModulesContainer.innerHTML = '';
         content.modules.forEach((moduleData, index) => {
-            const moduleElement = document.createElement('div');
-            moduleElement.classList.add('course-module');
             const titleElement = document.createElement('h3');
             titleElement.textContent = moduleData.title;
-            moduleElement.appendChild(titleElement);
+            courseModulesContainer.appendChild(titleElement);
+
+            const moduleElement = document.createElement('div');
+            moduleElement.classList.add('course-module');
 
             const moduleContent = document.createElement('div');
             moduleContent.classList.add('module-content');
             moduleContent.innerHTML = moduleData.topics.map(topic => `
                 <div class="topic">
                     <img src="assets/arrow.svg" alt="Arrow Icon">
-                    <div class="topic-content">
-                        <h4>${topic.title}</h4>
-                        <p>${topic.description}</p>
-                        <span class="hours">(${topic.hours} Hrs)</span>
-                    </div>
+                    <p class="topic-content"><span class="topic-title">${topic.title}</span> — ${topic.description}(${moduleData.classMinutes} min)</p>
                 </div>
             `).join('');
             moduleElement.appendChild(moduleContent);
@@ -522,16 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const footer = document.createElement('div');
             footer.classList.add('module-footer');
             footer.innerHTML = `
-                <p>Total Hours: ${moduleData.totalHours}</p>
-                <p>|</p>
-                <p>Instructor: ${moduleData.instructor}</p>
+                <p>${moduleData.contactHours} contact hours · ${moduleData.topics.length} classes × ${moduleData.classMinutes} min</p>
             `;
             moduleElement.appendChild(footer);
-
-            const iconBox = document.createElement('div');
-            iconBox.classList.add('icon-box');
-            iconBox.innerHTML = `<img src="${moduleData.icon}" alt="Phase Icon" class="module-icon" />`;
-            moduleElement.appendChild(iconBox);
             courseModulesContainer.appendChild(moduleElement);
         });
     }
