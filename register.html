@@ -49,7 +49,19 @@
 
     .form-wrapper {
       width: 100%;
-      padding: 2rem 2rem;
+      padding: calc(113px + 1rem) 2rem 2rem;
+    }
+
+    @media (max-width: 1200px) {
+      .form-wrapper {
+        padding-top: calc(83px + 1rem);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-wrapper {
+        padding-top: calc(60px + 1rem);
+      }
     }
 
     iframe {
@@ -67,7 +79,7 @@
 
   <div class="form-wrapper">
     <iframe 
-      data-tally-src="https://tally.so/embed/wzbDBM?alignLeft=1&dynamicHeight=1" 
+      data-tally-src="https://tally.so/embed/RWxJ6d?alignLeft=1&dynamicHeight=1&transparentBackground=1&formEventsForwarding=1"
       loading="lazy" 
       width="100%" 
       height="1630" 
@@ -98,6 +110,15 @@
         s.onerror = v;
         d.body.appendChild(s);
       }
+
+      window.addEventListener("message", function(e) {
+        if (e.origin !== "https://tally.so" || typeof e.data !== "string") return;
+        try {
+          if (JSON.parse(e.data).event === "Tally.FormSubmitted") {
+            window.location.href = "./thankyou.html";
+          }
+        } catch (err) {}
+      });
     </script>
   </div>
 
