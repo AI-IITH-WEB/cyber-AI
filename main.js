@@ -483,3 +483,192 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Enroll Now — Tag Card + Modal Logic
+// Submissions go to a Google Apps Script web app, deployed from the enroll Google Form's owner account.
+// It records each submission as a form response and replies { ok: true } only once it's saved.
+// Deployment must be "Execute as: Me" + "Who has access: Anyone" — otherwise visitors get a Google sign-in page.
+const ENROLL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxvTSnyUqvNrlsJBI7Fc1v4e0S76H0c74km5U_z-mHcSmAWLz5t69KHInTpHpUncg/exec';
+
+const ENROLL_SUBMIT_TIMEOUT_MS = 15000;
+
+const ENROLL_MARKUP = `
+    <button type="button" class="enroll-fixed" id="openEnrollModal" aria-label="Enroll Now" aria-haspopup="dialog" aria-controls="enrollModal">
+        <span>Enroll<br>Now</span>
+    </button>
+
+    <div id="enrollModal" class="enroll-modal">
+        <div class="enroll-modal-frame" role="dialog" aria-modal="true" aria-labelledby="enrollModalTitle">
+            <button type="button" class="enroll-close-btn" id="closeEnrollModal" aria-label="Close enrollment form">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M21 3L3 21" /></svg>
+            </button>
+            <div class="enroll-modal-panel">
+                <div id="enrollFormView">
+                    <h2 class="enroll-modal-title" id="enrollModalTitle">Enroll Now into Certification program in Cybersecurity x GenAI</h2>
+                    <form class="enroll-form" id="enrollForm">
+                        <div class="enroll-field">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                            <input type="text" name="name" placeholder="Your name" aria-label="Your name" autocomplete="name" minlength="2" maxlength="100" pattern=".*\\S.*" title="Enter your name" required>
+                        </div>
+                        <div class="enroll-field">
+                            <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                            <input type="tel" name="phone" placeholder="Phone Number" aria-label="Phone Number" autocomplete="tel" maxlength="20" pattern="\\+?(?:[0-9][ \\-]?){9,14}[0-9]" title="Enter a valid phone number (10–15 digits, country code optional)" required>
+                        </div>
+                        <div class="enroll-field">
+                            <i class="fas fa-edit" aria-hidden="true"></i>
+                            <input type="text" name="designation" placeholder="Designation" aria-label="Designation" autocomplete="organization-title" maxlength="100" pattern=".*\\S.*" title="Enter your designation" required>
+                        </div>
+                        <div class="enroll-field">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <input type="email" name="email" placeholder="Email Id" aria-label="Email Id" autocomplete="email" maxlength="254" pattern="[^@\\s]+@[^@\\s]+\\.[^@\\s]+" title="Enter a valid email address, e.g. name@example.com" required>
+                        </div>
+                        <p class="enroll-form-error" id="enrollFormError" role="alert" hidden></p>
+                        <button type="submit" class="enroll-submit-btn">Submit</button>
+                    </form>
+                </div>
+                <!-- Thank-you view — shown in place of the form after a successful submission -->
+                <div id="enrollThankYou" hidden>
+                    <h2 class="enroll-modal-title enroll-thankyou-title" id="enrollThankYouTitle">Thank you for enrolling into Certification program in Cybersecurity x GenAI</h2>
+                    <button type="button" class="enroll-submit-btn enroll-thankyou-btn" id="enrollThankYouClose" aria-describedby="enrollThankYouTitle">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // A page opts in by linking enroll.css — only live, user-facing pages do
+    if (!document.querySelector('link[href$="enroll.css"]')) return;
+    document.body.insertAdjacentHTML('beforeend', ENROLL_MARKUP);
+
+    const enrollModal = document.getElementById('enrollModal');
+    const openEnrollModal = document.getElementById('openEnrollModal');
+    const closeEnrollModal = document.getElementById('closeEnrollModal');
+    const enrollForm = document.getElementById('enrollForm');
+    const enrollSubmitBtn = enrollForm && enrollForm.querySelector('.enroll-submit-btn');
+    const enrollFormError = document.getElementById('enrollFormError');
+    const enrollPanel = enrollModal && enrollModal.querySelector('.enroll-modal-panel');
+    const enrollFormView = document.getElementById('enrollFormView');
+    const enrollThankYou = document.getElementById('enrollThankYou');
+    const enrollThankYouClose = document.getElementById('enrollThankYouClose');
+
+    if (!enrollModal || !openEnrollModal || !enrollForm) return;
+
+    function openModal() {
+        enrollModal.classList.add('is-open');
+        document.documentElement.classList.add('enroll-modal-open');
+
+        const firstInput = enrollModal.querySelector('input');
+        if (firstInput) {
+            firstInput.focus();
+        }
+    }
+
+    function closeModal() {
+        enrollModal.classList.remove('is-open');
+        document.documentElement.classList.remove('enroll-modal-open');
+        resetEnrollView();
+        openEnrollModal.focus();
+    }
+
+    // Swap the form for the thank-you view, keeping the panel at the same height
+    function showThankYou() {
+        if (!enrollFormView || !enrollThankYou) return;
+        enrollPanel.style.minHeight = enrollPanel.offsetHeight + 'px';
+        enrollFormView.hidden = true;
+        enrollThankYou.hidden = false;
+        if (enrollThankYouClose) {
+            enrollThankYouClose.focus();
+        }
+    }
+
+    // After a submission, the next open starts from a fresh form
+    function resetEnrollView() {
+        if (!enrollThankYou || enrollThankYou.hidden) return;
+        enrollPanel.style.minHeight = '';
+        enrollThankYou.hidden = true;
+        enrollFormView.hidden = false;
+        enrollForm.reset();
+    }
+
+    function setSubmitting(isSubmitting) {
+        enrollSubmitBtn.disabled = isSubmitting;
+        enrollSubmitBtn.textContent = isSubmitting ? 'Submitting…' : 'Submit';
+    }
+
+    function showFormError(message) {
+        enrollFormError.textContent = message;
+        enrollFormError.hidden = !message;
+    }
+
+    openEnrollModal.addEventListener('click', openModal);
+
+    if (closeEnrollModal) {
+        closeEnrollModal.addEventListener('click', closeModal);
+    }
+
+    if (enrollThankYouClose) {
+        enrollThankYouClose.addEventListener('click', closeModal);
+    }
+
+    enrollModal.addEventListener('click', function(event) {
+        if (event.target === enrollModal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && enrollModal.classList.contains('is-open')) {
+            closeModal();
+        }
+    });
+
+    // Runs only once the browser's built-in validation (required, pattern, type=email) has passed
+    enrollForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        showFormError('');
+
+        if (!ENROLL_ENDPOINT) {
+            console.warn('Enroll form: ENROLL_ENDPOINT is not configured.');
+            showFormError('Enrollment is not open yet. Please try again later.');
+            return;
+        }
+
+        const payload = {};
+        new FormData(enrollForm).forEach(function(value, name) {
+            payload[name] = value.trim();
+        });
+
+        setSubmitting(true);
+
+        // Give up on a stalled request so the button isn't stuck on "Submitting…"
+        const controller = new AbortController();
+        const timeoutId = setTimeout(function() {
+            controller.abort();
+        }, ENROLL_SUBMIT_TIMEOUT_MS);
+
+        // A string body is sent as text/plain, which Apps Script accepts without a CORS preflight.
+        // Thank-you only on { ok: true }; { ok: false }, a sign-in/HTML page, network errors and
+        // timeouts all show the inline error instead.
+        fetch(ENROLL_ENDPOINT, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            signal: controller.signal
+        })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(result) {
+                if (!result.ok) {
+                    throw new Error(result.error);
+                }
+                showThankYou();
+            })
+            .catch(function(err) {
+                console.error('Enroll form: submission failed.', err);
+                showFormError('Could not submit your details. Please check your connection and try again.');
+            })
+            .finally(function() {
+                clearTimeout(timeoutId);
+                setSubmitting(false);
+            });
+    });
+});
