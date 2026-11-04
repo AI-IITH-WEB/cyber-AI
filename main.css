@@ -1259,7 +1259,15 @@ sub {
     flex-direction: column;
     justify-content: center;
     margin-bottom: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+  .fee-box:hover,
+  .fee-box:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(137, 59, 46, 0.35);
+  }
   .fee-box h4 {
     font-size: 1.48rem;
     margin-top: 10px;
