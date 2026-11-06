@@ -612,7 +612,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Swap the form for the thank-you view, keeping the panel at the same height
     function showThankYou() {
-        if (!enrollFormView || !enrollThankYou) return;
+        if (!enrollFormView || !enrollThankYou || !enrollThankYou.hidden) return;
+
+        // Tells Google Tag Manager an enrollment was submitted (the thank-you view isn't a page load,
+        // so GTM can't see it otherwise). In GTM, trigger on Custom Event "enroll_form_submit".
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'enroll_form_submit' });
+
         enrollPanel.style.minHeight = enrollPanel.offsetHeight + 'px';
         enrollFormView.hidden = true;
         enrollThankYou.hidden = false;
