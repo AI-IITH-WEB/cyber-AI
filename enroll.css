@@ -67,12 +67,16 @@ html.enroll-modal-open body {
 
 /* Swoosh background approximated with gradients — swap for the designer's export when available:
    background: url('assets/enroll-modal-bg.jpg') center / cover no-repeat; */
+/* Never taller than the screen — when the content is, the panel inside scrolls (not the page) */
 .enroll-modal-frame {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 820px;
+  max-height: 100%;
   margin: auto;
-  padding: 44px 32px 32px;
+  padding: 24px 22px 22px;
   border-radius: 4px;
   background-color: #0a1222;
   background-image:
@@ -114,11 +118,23 @@ html.enroll-modal-open body {
 .enroll-modal-panel {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 30px 56px 32px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+  padding: 20px 46px 20px;
   border-radius: 4px;
-  background-color: rgba(4, 8, 16, 0.72);
+  background-color: rgba(4, 8, 16, 0.52);
   text-align: center;
+}
+
+/* Vertically centres the form / thank-you view; unlike justify-content: center,
+   auto margins drop to 0 when the content overflows, so the top stays reachable */
+.enroll-modal-panel > * {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .enroll-modal-title {
@@ -140,6 +156,19 @@ html.enroll-modal-open body {
   gap: 16px;
   max-width: 620px;
   margin: 0 auto;
+}
+
+/* Tally form embed — same width as the custom 2×2 form; embed.js sets the iframe height */
+.enroll-tally {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.enroll-tally iframe {
+  display: block;
+  width: 100%;
+  border: 0;
 }
 
 .enroll-field {

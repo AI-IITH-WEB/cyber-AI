@@ -484,26 +484,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Enroll Now — Tag Card + Modal Logic
-// Submissions go to a Google Apps Script web app, deployed from the enroll Google Form's owner account.
-// It records each submission as a form response and replies { ok: true } only once it's saved.
-// Deployment must be "Execute as: Me" + "Who has access: Anyone" — otherwise visitors get a Google sign-in page.
+// The modal holds one of two forms, picked by ENROLL_TALLY_EMBED_URL:
+// - Tally (URL set): the Tally form is embedded in the modal; Tally stores the submissions and CV uploads.
+//   hideTitle = the modal shows its own title, transparentBackground = the modal art shows through,
+//   dynamicHeight = embed.js sizes the iframe to the form, alignLeft = no side margins.
+// - Custom form (URL = '' — the previous setup, kept intact): a 2×2 HTML form whose submissions go to a
+//   Google Apps Script web app, deployed from the enroll Google Form's owner account. It records each
+//   submission as a form response and replies { ok: true } only once it's saved. Deployment must be
+//   "Execute as: Me" + "Who has access: Anyone" — otherwise visitors get a Google sign-in page.
+const ENROLL_TALLY_EMBED_URL = 'https://tally.so/embed/VpjZ4l?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1';
+const TALLY_EMBED_SCRIPT = 'https://tally.so/widgets/embed.js';
+
 const ENROLL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxvTSnyUqvNrlsJBI7Fc1v4e0S76H0c74km5U_z-mHcSmAWLz5t69KHInTpHpUncg/exec';
 
 const ENROLL_SUBMIT_TIMEOUT_MS = 15000;
 
-const ENROLL_MARKUP = `
-    <button type="button" class="enroll-fixed" id="openEnrollModal" aria-label="Enroll Now" aria-haspopup="dialog" aria-controls="enrollModal">
-        <span>Enroll<br>Now</span>
-    </button>
+// The modal opens by itself on page load until the visitor closes it. After that it stays closed on every
+// page for the rest of the browser session (sessionStorage) and opens only from the Enroll Now tab.
+const ENROLL_AUTO_OPEN = true;
+const ENROLL_DISMISSED_KEY = 'enrollModalDismissed';
 
-    <div id="enrollModal" class="enroll-modal">
-        <div class="enroll-modal-frame" role="dialog" aria-modal="true" aria-labelledby="enrollModalTitle">
-            <button type="button" class="enroll-close-btn" id="closeEnrollModal" aria-label="Close enrollment form">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M21 3L3 21" /></svg>
-            </button>
-            <div class="enroll-modal-panel">
-                <div id="enrollFormView">
-                    <h2 class="enroll-modal-title" id="enrollModalTitle">Enroll Now into Certification program in Cybersecurity x GenAI</h2>
+// The Tally iframe is created on first open (loadTallyForm), so pages where the modal stays closed don't load it
+const ENROLL_TALLY_MARKUP = `
+                    <div class="enroll-tally" id="enrollTally"></div>`;
+
+const ENROLL_FORM_MARKUP = `
                     <form class="enroll-form" id="enrollForm">
                         <div class="enroll-field">
                             <i class="fas fa-user" aria-hidden="true"></i>
@@ -523,7 +528,21 @@ const ENROLL_MARKUP = `
                         </div>
                         <p class="enroll-form-error" id="enrollFormError" role="alert" hidden></p>
                         <button type="submit" class="enroll-submit-btn">Submit</button>
-                    </form>
+                    </form>`;
+
+const ENROLL_MARKUP = `
+    <button type="button" class="enroll-fixed" id="openEnrollModal" aria-label="Enroll Now" aria-haspopup="dialog" aria-controls="enrollModal">
+        <span>Enroll<br>Now</span>
+    </button>
+
+    <div id="enrollModal" class="enroll-modal">
+        <div class="enroll-modal-frame" role="dialog" aria-modal="true" aria-labelledby="enrollModalTitle">
+            <button type="button" class="enroll-close-btn" id="closeEnrollModal" aria-label="Close enrollment form">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M21 3L3 21" /></svg>
+            </button>
+            <div class="enroll-modal-panel">
+                <div id="enrollFormView">
+                    <h2 class="enroll-modal-title" id="enrollModalTitle">Enroll Now into Certification program in Cybersecurity x GenAI</h2>${ENROLL_TALLY_EMBED_URL ? ENROLL_TALLY_MARKUP : ENROLL_FORM_MARKUP}
                 </div>
                 <!-- Thank-you view — shown in place of the form after a successful submission -->
                 <div id="enrollThankYou" hidden>
@@ -549,14 +568,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const enrollFormView = document.getElementById('enrollFormView');
     const enrollThankYou = document.getElementById('enrollThankYou');
     const enrollThankYouClose = document.getElementById('enrollThankYouClose');
+    const enrollTally = document.getElementById('enrollTally');
+    let enrollTallyFrame = null;
 
-    if (!enrollModal || !openEnrollModal || !enrollForm) return;
+    if (!enrollModal || !openEnrollModal) return;
 
     function openModal() {
         enrollModal.classList.add('is-open');
         document.documentElement.classList.add('enroll-modal-open');
+        loadTallyForm();
 
-        const firstInput = enrollModal.querySelector('input');
+        // First field of the custom form, or the Tally iframe
+        const firstInput = enrollModal.querySelector('input, iframe');
         if (firstInput) {
             firstInput.focus();
         }
@@ -567,6 +590,24 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.classList.remove('enroll-modal-open');
         resetEnrollView();
         openEnrollModal.focus();
+        rememberDismissed();
+    }
+
+    // sessionStorage can throw when storage is blocked — then the modal just auto-opens on every page load
+    function wasDismissed() {
+        try {
+            return sessionStorage.getItem(ENROLL_DISMISSED_KEY) === '1';
+        } catch (err) {
+            return false;
+        }
+    }
+
+    function rememberDismissed() {
+        try {
+            sessionStorage.setItem(ENROLL_DISMISSED_KEY, '1');
+        } catch (err) {
+            // Ignore — see wasDismissed()
+        }
     }
 
     // Swap the form for the thank-you view, keeping the panel at the same height
@@ -586,7 +627,13 @@ document.addEventListener('DOMContentLoaded', function() {
         enrollPanel.style.minHeight = '';
         enrollThankYou.hidden = true;
         enrollFormView.hidden = false;
-        enrollForm.reset();
+        if (enrollForm) {
+            enrollForm.reset();
+        }
+        // Tally shows its own done page after a submit — reload it for a blank form
+        if (enrollTallyFrame && enrollTallyFrame.src) {
+            enrollTallyFrame.src = enrollTallyFrame.src;
+        }
     }
 
     function setSubmitting(isSubmitting) {
@@ -597,6 +644,46 @@ document.addEventListener('DOMContentLoaded', function() {
     function showFormError(message) {
         enrollFormError.textContent = message;
         enrollFormError.hidden = !message;
+    }
+
+    // Creates the Tally iframe on first open. embed.js loads it and keeps it sized to the form
+    // (dynamicHeight); if embed.js is blocked or fails, the form still loads at the iframe's fixed height.
+    function loadTallyForm() {
+        if (!enrollTally || enrollTallyFrame) return;
+
+        enrollTallyFrame = document.createElement('iframe');
+        enrollTallyFrame.title = 'Enrollment form';
+        enrollTallyFrame.height = 420;
+        enrollTallyFrame.dataset.tallySrc = ENROLL_TALLY_EMBED_URL;
+        enrollTally.appendChild(enrollTallyFrame);
+
+        function loadWithoutScript() {
+            if (!enrollTallyFrame.src) {
+                enrollTallyFrame.src = ENROLL_TALLY_EMBED_URL;
+            }
+        }
+
+        if (typeof Tally !== 'undefined') {
+            Tally.loadEmbeds();
+            return;
+        }
+
+        // Some pages already include embed.js (async); otherwise add it
+        let script = document.querySelector('script[src="' + TALLY_EMBED_SCRIPT + '"]');
+        if (!script) {
+            script = document.createElement('script');
+            script.src = TALLY_EMBED_SCRIPT;
+            document.body.appendChild(script);
+        }
+        script.addEventListener('load', function() {
+            if (typeof Tally !== 'undefined') {
+                Tally.loadEmbeds();
+            }
+            loadWithoutScript();
+        });
+        script.addEventListener('error', loadWithoutScript);
+        // Covers an embed.js that had already failed before this ran (its events won't fire again)
+        setTimeout(loadWithoutScript, 8000);
     }
 
     openEnrollModal.addEventListener('click', openModal);
@@ -620,6 +707,29 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+
+    // Tally posts its events to the page as JSON strings — swap in the thank-you view once the form is submitted
+    window.addEventListener('message', function(event) {
+        if (event.origin !== 'https://tally.so' || typeof event.data !== 'string') return;
+        if (!enrollModal.classList.contains('is-open')) return;
+
+        let message;
+        try {
+            message = JSON.parse(event.data);
+        } catch (err) {
+            return;
+        }
+        if (message && message.event === 'Tally.FormSubmitted') {
+            showThankYou();
+        }
+    });
+
+    if (ENROLL_AUTO_OPEN && !wasDismissed()) {
+        openModal();
+    }
+
+    // The rest only applies to the custom form (not rendered when the Tally form is used)
+    if (!enrollForm) return;
 
     // Runs only once the browser's built-in validation (required, pattern, type=email) has passed
     enrollForm.addEventListener('submit', function(event) {
