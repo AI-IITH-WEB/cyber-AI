@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aicybercourse.ai.iith.ac.in/sitemap.xml
