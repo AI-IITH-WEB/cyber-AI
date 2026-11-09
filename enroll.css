@@ -16,10 +16,11 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-right: none;
   border-radius: 14px 0 0 14px;
-  /* Cropped from the designer's enroll.svg export; gradient fades to coral behind the label */
+  /* Cropped from the designer's enroll.svg export; gradient fades to coral behind the label.
+     enroll-cta-bg.webp = enroll-cta-bg.jpg at ~2.3x the tab's size */
   background:
     linear-gradient(180deg, rgba(242, 100, 76, 0) 0%, #f2644c 100%),
-    url('assets/enroll-cta-bg.jpg') center / cover no-repeat;
+    url('assets/enroll-cta-bg.webp') center / cover no-repeat;
   box-shadow: -6px 8px 20px rgba(0, 0, 0, 0.28);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
   font-family: inherit;
@@ -75,7 +76,12 @@ html.enroll-modal-open body {
   width: 100%;
   max-width: 820px;
   max-height: 100%;
-  margin: auto;
+  /* Centred with top + translate (same position as margin: auto). When the Tally form inside reports its height
+     and grows, only the transform changes, so the frame doesn't shift in layout terms (PageSpeed CLS) */
+  margin: 0 auto;
+  align-self: flex-start;
+  top: 50%;
+  transform: translateY(-50%);
   padding: 24px 22px 22px;
   border-radius: 4px;
   background-color: #0a1222;
@@ -175,13 +181,15 @@ html.enroll-modal-open body {
   position: relative;
 }
 
-.enroll-field i {
+.enroll-field i,
+.enroll-field svg {
   position: absolute;
   top: 50%;
   left: 22px;
   transform: translateY(-50%);
   font-size: 14px;
   color: var(--primary-color);
+  fill: currentColor;
   pointer-events: none;
 }
 

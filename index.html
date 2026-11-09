@@ -1,46 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberAI - Advanced Executive Program</title>
+    <meta name="description" content="Certification Program in Cybersecurity x GenAI by IIT Hyderabad: 7 weekends of live online classes plus an in-person campus immersion at IIT Hyderabad, for professionals in cybersecurity and AI.">
+    <meta name="google-site-verification" content="gmFBmD0YlFOD01uXRPCUCv-vIDR0XHMAIR-Gs68zA9o" />
+    <link rel="icon" type="image/png" href="assets/favicon1.png">
+    <!-- Start the above-the-fold downloads before main.css is parsed: the hero background (largest paint) and the body font -->
+    <link rel="preload" href="assets/hero-bg-mobile.webp" as="image" type="image/webp" media="(max-width: 800px)" fetchpriority="high">
+    <link rel="preload" href="assets/hero-bg.webp" as="image" type="image/webp" media="not all and (max-width: 800px)" fetchpriority="high">
+    <link rel="preload" href="assets/fonts/ruda-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- latin-ext holds the ₹ sign used in the fee figures -->
+    <link rel="preload" href="assets/fonts/ruda-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preconnect" href="https://tally.so">
+    <!-- Below-the-fold background images wait for the first scroll/tap or the end of page load (see .lazy-bg in main.css) -->
+    <script>
+    (function (w, d) {
+        var html = d.documentElement;
+        var events = ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'];
+        function show() {
+            html.classList.remove('lazy-bg');
+            events.forEach(function (e) { w.removeEventListener(e, show, true); });
+            w.removeEventListener('load', show);
+        }
+        html.classList.add('lazy-bg');
+        events.forEach(function (e) { w.addEventListener(e, show, { capture: true, passive: true }); });
+        w.addEventListener('load', show);
+    })(window, document);
+    </script>
+
+    <!-- Tracking tags (OpenAI, Google Tag Manager x3, Google tag, Meta Pixel).
+         Every tag call below (dataLayer pushes, gtag, fbq, oaiq) still runs immediately, as before, and is queued;
+         only the download of the vendor scripts waits until the visitor first interacts with the page (scroll, tap,
+         click, key press, mouse move) or TAGS_FALLBACK_MS after the page has loaded, whichever comes first. The
+         vendor scripts then process the queue, so no event is lost. This keeps ~1.5 MB of tag JavaScript out of the
+         page load (PageSpeed: Total Blocking Time, LCP). To load them immediately again, set TAGS_FALLBACK_MS = 0. -->
+    <script>
+    (function (w, d) {
+        var TAGS_FALLBACK_MS = 5000;
+        var queue = [], released = false;
+        var events = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'wheel', 'mousemove'];
+        function inject(src) {
+            var s = d.createElement('script');
+            s.async = true;
+            s.src = src;
+            d.head.appendChild(s);
+        }
+        function release() {
+            if (released) return;
+            released = true;
+            events.forEach(function (e) { w.removeEventListener(e, release, true); });
+            queue.forEach(inject);
+            queue = [];
+        }
+        // Used by the tag snippets below instead of inserting their <script> directly
+        w.loadTagScript = function (src) { released ? inject(src) : queue.push(src); };
+        // Called by main.js when an enrollment is submitted, so the conversion is sent right away
+        w.loadTagsNow = release;
+        // Capture phase: also sees scrolls of <body>, which is this page's scroll container
+        events.forEach(function (e) { w.addEventListener(e, release, { capture: true, passive: true }); });
+        w.addEventListener('load', function () { setTimeout(release, TAGS_FALLBACK_MS); });
+    })(window, document);
+    </script>
     <!-- OpenAI Pixel -->
-    <script>!function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;var j=d.createElement(s);j.async=1;j.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j,f)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");oaiq("init",{pixelId:"D8nHwhhHMM34BQfMXRkJHV",debug:true});</script>
+    <script>!function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;w.loadTagScript(u)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");oaiq("init",{pixelId:"D8nHwhhHMM34BQfMXRkJHV",debug:true});</script>
     <!-- End OpenAI Pixel -->
     <!-- Google Tag Manager (GTM-NNLCB9RF) -->
-    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NNLCB9RF"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+    loadTagScript('https://www.googletagmanager.com/gtm.js?id=GTM-NNLCB9RF');
     </script>
     <!-- End Google Tag Manager (GTM-NNLCB9RF) -->
     <!-- Google Tag Manager (GTM-M5X6STR5) -->
-    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-M5X6STR5"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+    loadTagScript('https://www.googletagmanager.com/gtm.js?id=GTM-M5X6STR5');
     </script>
     <!-- End Google Tag Manager (GTM-M5X6STR5) -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="gmFBmD0YlFOD01uXRPCUCv-vIDR0XHMAIR-Gs68zA9o" />
-    <title>CyberAI - Advanced Executive Program</title>
-    <link rel="icon" type="image/png" href="assets/favicon1.png">
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="enroll.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="main.js"></script>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KWDYBFBBNX"></script> 
-     <script>   window.dataLayer = window.dataLayer || [];   
-     function gtag(){dataLayer.push(arguments);}   
-     gtag('js', new Date());   
-     gtag('config', 'G-KWDYBFBBNX'); 
-     </script>
-     <!-- Google Tag Manager -->
+    <!-- Google tag (gtag.js) -->
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KWDYBFBBNX');
+    loadTagScript('https://www.googletagmanager.com/gtag/js?id=G-KWDYBFBBNX');
+    </script>
+    <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    new Date().getTime(),event:'gtm.js'});var dl=l!='dataLayer'?'&l='+l:'';
+    w.loadTagScript('https://www.googletagmanager.com/gtm.js?id='+i+dl);
     })(window,document,'script','dataLayer','GTM-PLBRZSKP');</script>
     <!-- End Google Tag Manager -->
     <!-- Meta Pixel Code -->
@@ -49,17 +102,21 @@
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    n.queue=[];f.loadTagScript(v)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1598215347533453');
     fbq('track', 'PageView');
     </script>
+    <!-- End Meta Pixel Code -->
+
+    <link rel="stylesheet" href="main.css">
+    <!-- Only styles the Enroll tab and modal, which main.js adds after the page is parsed, so it doesn't block rendering.
+         main.js still finds it by href (that's how a page opts in to the Enroll modal). -->
+    <link rel="stylesheet" href="enroll.css" media="print" onload="this.media='all'">
+    <script src="main.js" defer></script>
     <noscript><img title="" height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1598215347533453&ev=PageView&noscript=1"
     /></noscript>
-    <!-- End Meta Pixel Code -->
 </head>
 
 <body>
@@ -69,7 +126,7 @@
     <!-- End Google Tag Manager (noscript) -->
     <header class="navbar">
         <div class="navcontainer">
-            <a href="https://aicybercourse.ai.iith.ac.in"><img title="logo" src="assets/logo 1.svg" class="logo"></a>
+            <a href="https://aicybercourse.ai.iith.ac.in"><img title="logo" src="assets/logo 1.svg" class="logo" width="275" height="71"></a>
             <nav class="nav-links">
                 <a href="about.html" class="nav-link">About Cyber AI</a>
                 <a href="#course-offerings" class="nav-link">Course Offerings</a>
@@ -105,7 +162,7 @@
                     <div class="herosub"> 
                       <div class="herosubpart">
                           <p>Program Partner</p>
-                          <img title="" src="assets/powerdby.svg" alt="partner_name">
+                          <img title="" src="assets/powerdby.svg" alt="partner_name" width="212" height="89">
                       </div>
                       <!-- <div class="herosubpart">
                           <p>Video</p>
@@ -133,17 +190,17 @@
                     <h1>In-Person Campus Immersion Experience at IIT Hyderabad</h1>
                     <p>Experience physically the IIT-H campus and AI Dept. <strong class="text-decoration">over a 2-days itinerary</strong>.</p>
                     <p class="arrow-text">
-                        <img title="" src="assets/arrow.svg" alt="Arrow Icon">
+                        <img title="" src="assets/arrow.svg" alt="Arrow Icon" width="13" height="13">
                         Network, meet and connect with the faculty members, fellow peers and industry leaders.
                     </p>
                 
                     <p class="arrow-text">
-                        <img title="" src="assets/arrow.svg" alt="Arrow Icon">
+                        <img title="" src="assets/arrow.svg" alt="Arrow Icon" width="13" height="13">
                         Participate in Ask-Me-Anything (AMA) session with leading experts in cybersecurity and AI.
                     </p>
                 
                     <p class="arrow-text">
-                        <img title="" src="assets/arrow.svg" alt="Arrow Icon">
+                        <img title="" src="assets/arrow.svg" alt="Arrow Icon" width="13" height="13">
                         Receive the formal certificate during a convocation ceremony at IITH.
                     </p>
                 </div>
@@ -157,10 +214,10 @@
                         <span class="overlapcard-number">01</span>
                         <div class="overlapcard-content">
                             <div class="overlapcard-logo">
-                                <img title="" src="assets/cardlogo1.svg" alt="Logo 1">
+                                <img title="" src="assets/cardlogo1.svg" alt="Logo 1" width="57" height="69">
                             </div>
                             <div class="overlapcard-text">
-                                <h3>Program Duration</h3>
+                                <h2>Program Duration</h2>
                                 <p>The program spans <span class="cardtext">4 months</span>, providing a structured learning experience</p>
                             </div>
                         </div>
@@ -169,10 +226,10 @@
                         <span class="overlapcard-number">02</span>
                         <div class="overlapcard-content">
                             <div class="overlapcard-logo">
-                                <img title="" src="assets/cardlogo2.svg" alt="Logo 2">
+                                <img title="" src="assets/cardlogo2.svg" alt="Logo 2" width="59" height="71">
                             </div>
                             <div class="overlapcard-text">
-                                <h3>Delivery Mode</h3>
+                                <h2>Delivery Mode</h2>
                                 <p>The course is delivered <span class="cardtext">online</span>, allowing flexible learning from anywhere.</p>
                             </div>
                         </div>
@@ -181,10 +238,10 @@
                         <span class="overlapcard-number">03</span>
                         <div class="overlapcard-content">
                             <div class="overlapcard-logo">
-                                <img title="" src="assets/cardlogo3.svg" alt="Logo 3">
+                                <img title="" src="assets/cardlogo3.svg" alt="Logo 3" width="71" height="76">
                             </div>
                             <div class="overlapcard-text">
-                                <h3>Certification</h3>
+                                <h2>Certification</h2>
                                 <p>Upon completion, you will receive a <span class="cardtext">certificate from IIT Hyderabad</span>, adding credibility and recognition to your skills.</p>
                             </div>
                         </div>
@@ -241,7 +298,7 @@
                     <div class="details">
                         <hr>
                         <div class="clockcard">
-                            <img title="" src="assets/clockcardlogo1.svg" alt="Clock Logo" class="clock-logo">
+                            <img title="" src="assets/clockcardlogo1.svg" alt="Clock Logo" class="clock-logo" width="47" height="55" loading="lazy">
                             <div class="clock-text">
                                 <p><strong>Registration</strong></p>
                                 <p>31 Dec 2026</p>
@@ -249,7 +306,7 @@
                         </div>
                         <hr>
                         <div class="clockcard">
-                            <img title="" src="assets/clockcardlogo2.svg" alt="Clock Logo" class="clock-logo">
+                            <img title="" src="assets/clockcardlogo2.svg" alt="Clock Logo" class="clock-logo" width="51" height="51" loading="lazy">
                             <div class="clock-text">
                                 <p><strong>Course Starts on</strong></p>
                                 <p>09 Jan 2027</p>
@@ -257,7 +314,7 @@
                         </div>
                         <hr>
                         <div class="clockcard">
-                            <img title="" src="assets/clockcardlogo3.svg" alt="Clock Logo" class="clock-logo">
+                            <img title="" src="assets/clockcardlogo3.svg" alt="Clock Logo" class="clock-logo" width="58" height="61" loading="lazy">
                             <div class="clock-text">
                                 <p><strong>Duration</strong></p>
                                 <p>7 Weekends</p>
@@ -266,7 +323,7 @@
                         </div>
                         <hr>
                         <div class="clockcard">
-                            <img title="" src="assets/clockcardlogo4.svg" alt="Clock Logo" class="clock-logo">
+                            <img title="" src="assets/clockcardlogo4.svg" alt="Clock Logo" class="clock-logo" width="55" height="57" loading="lazy">
                             <div class="clock-text">
                                 <p><strong>Program fee</strong></p>
                                 <p>₹ 1,25,000<sup class="gst">+ GST</sup></p>
@@ -339,7 +396,7 @@
                     </div>
                     <div class="certification-image">
                         <div class="certificate-illustration">
-                            <img title="sample cerificate illustration" src="assets/sample_certificate.svg" alt="Certificate Recognition Illustration">
+                            <img title="sample cerificate illustration" src="assets/sample_certificate.svg" alt="Certificate Recognition Illustration" width="525" height="590" loading="lazy" decoding="async">
                         </div>
                     </div>
                 </div>
@@ -353,73 +410,73 @@
                 <div class="skills-grid">
                     <div class="skills-column">
                         <div class="skill-item">
-                            <img title="ai" src="assets/check-circle.svg">
+                            <img title="ai" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Fundamentals of AI</span>
                         </div>
                         <div class="skill-item">
-                            <img title="cybersecurity" src="assets/check-circle.svg">
+                            <img title="cybersecurity" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Core cybersecurity concepts</span>
                         </div>
                         <div class="skill-item">
-                            <img title="intrusion detection" src="assets/check-circle.svg">
+                            <img title="intrusion detection" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Intrusion detection system development and optimization</span>
                         </div>
                         <div class="skill-item">
-                            <img title="iot security" src="assets/check-circle.svg">
+                            <img title="iot security" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>IoT security techniques</span>
                         </div>
                         <div class="skill-item">
-                            <img title="machine learning" src="assets/check-circle.svg">
+                            <img title="machine learning" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Statistical and deep learning for anomaly detection</span>
                         </div>
                         <div class="skill-item">
-                            <img title="behavior analysis" src="assets/check-circle.svg">
+                            <img title="behavior analysis" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Behavior analysis</span>
                         </div>
                         <div class="skill-item">
-                            <img title="biometric authentication" src="assets/check-circle.svg">
+                            <img title="biometric authentication" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Biometric authentication</span>
                         </div>
                         <div class="skill-item">
-                            <img title="vulnerability scanning" src="assets/check-circle.svg">
+                            <img title="vulnerability scanning" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Vulnerability scanning and assessment</span>
                         </div>
                         <div class="skill-item">
-                            <img title="supply chain attack prevention" src="assets/check-circle.svg">
+                            <img title="supply chain attack prevention" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Supply chain attack prevention</span>
                         </div>
                     </div>
                     <div class="skills-column">
                         <div class="skill-item">
-                            <img title="adversarial attack countermeasures" src="assets/check-circle.svg">
+                            <img title="adversarial attack countermeasures" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Adversarial attack countermeasures</span>
                         </div>
                         <div class="skill-item">
-                            <img title="data poisoning mitigation" src="assets/check-circle.svg">
+                            <img title="data poisoning mitigation" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Data poisoning mitigation</span>
                         </div>
                         <div class="skill-item">
-                            <img title="model extraction prevention" src="assets/check-circle.svg">
+                            <img title="model extraction prevention" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Model extraction prevention</span>
                         </div>
                         <div class="skill-item">
-                            <img title="advanced adversarial attack countermeasures" src="assets/check-circle.svg">
+                            <img title="advanced adversarial attack countermeasures" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Advanced adversarial attack countermeasures</span>
                         </div>
                         <div class="skill-item">
-                            <img title="differential privacy techniques" src="assets/check-circle.svg">
+                            <img title="differential privacy techniques" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Differential privacy techniques</span>
                         </div>
                         <div class="skill-item">
-                            <img title="federated learning" src="assets/check-circle.svg">
+                            <img title="federated learning" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Federated learning</span>
                         </div>
                         <div class="skill-item">
-                            <img title="robust defense development" src="assets/check-circle.svg">
+                            <img title="robust defense development" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Robust defense development</span>
                         </div>
                         <div class="skill-item">
-                            <img title="adversarial training techniques" src="assets/check-circle.svg">
+                            <img title="adversarial training techniques" src="assets/check-circle.svg" width="24" height="24" loading="lazy">
                             <span>Adversarial training techniques</span>
                         </div>
                     </div>
@@ -472,7 +529,7 @@
                             <li><span class="schedule-label">Preparation</span> Review prerequisites and plan your learning schedule before the start date.</li>
                         </ul>
                         <div class="schedule-illustration">
-                            <img title="" src="assets/illustration.svg" alt="Course Schedule Illustration">
+                            <img title="" src="assets/illustration.svg" alt="Course Schedule Illustration" width="600" height="438" loading="lazy" decoding="async">
                         </div>
                     </div>
                 </div>
@@ -489,74 +546,74 @@
                     <!-- Row 1 — Visible -->
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Community Leaders" src="assets/successfulLearners/VDR_0367%201.webp" alt="Community Leaders">
+                            <img title="Community Leaders" src="assets/successfulLearners/VDR_0367%201.webp" alt="Community Leaders" srcset="assets/successfulLearners/thumbs/VDR_0367-1-320.webp 320w, assets/successfulLearners/thumbs/VDR_0367-1-640.webp 640w, assets/successfulLearners/VDR_0367%201.webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Community Leaders</h4>
+                            <h3 class="learner-name">Community Leaders</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Rising Innovators" src="assets/successfulLearners/VDR_0338%201.webp" alt="Rising Innovators">
+                            <img title="Rising Innovators" src="assets/successfulLearners/VDR_0338%201.webp" alt="Rising Innovators" srcset="assets/successfulLearners/thumbs/VDR_0338-1-320.webp 320w, assets/successfulLearners/thumbs/VDR_0338-1-640.webp 640w, assets/successfulLearners/VDR_0338%201.webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Rising Innovators</h4>
+                            <h3 class="learner-name">Rising Innovators</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Tech Visionaries" src="assets/successfulLearners/VDR_0246%201.webp" alt="Tech Visionaries">
+                            <img title="Tech Visionaries" src="assets/successfulLearners/VDR_0246%201.webp" alt="Tech Visionaries" srcset="assets/successfulLearners/thumbs/VDR_0246-1-320.webp 320w, assets/successfulLearners/thumbs/VDR_0246-1-640.webp 640w, assets/successfulLearners/VDR_0246%201.webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Tech Visionaries</h4>
+                            <h3 class="learner-name">Tech Visionaries</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Innovation Pioneers" src="assets/successfulLearners/innovation-pioneers-image.webp" alt="Innovation Pioneers">
+                            <img title="Innovation Pioneers" src="assets/successfulLearners/innovation-pioneers-image.webp" alt="Innovation Pioneers" srcset="assets/successfulLearners/thumbs/innovation-pioneers-image-320.webp 320w, assets/successfulLearners/thumbs/innovation-pioneers-image-640.webp 640w, assets/successfulLearners/innovation-pioneers-image.webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Innovation Pioneers</h4>
+                            <h3 class="learner-name">Innovation Pioneers</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
                     <!-- Row 2 — Visible -->
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Global Changemakers" src="assets/successfulLearners/VDR_0244%201.webp" alt="Global Changemakers">
+                            <img title="Global Changemakers" src="assets/successfulLearners/VDR_0244%201.webp" alt="Global Changemakers" srcset="assets/successfulLearners/thumbs/VDR_0244-1-320.webp 320w, assets/successfulLearners/thumbs/VDR_0244-1-640.webp 640w, assets/successfulLearners/VDR_0244%201.webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Global Changemakers</h4>
+                            <h3 class="learner-name">Global Changemakers</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Creative Pioneers" src="assets/successfulLearners/VDR_0199%201.webp" alt="Creative Pioneers">
+                            <img title="Creative Pioneers" src="assets/successfulLearners/VDR_0199%201.webp" alt="Creative Pioneers" srcset="assets/successfulLearners/thumbs/VDR_0199-1-320.webp 320w, assets/successfulLearners/thumbs/VDR_0199-1-640.webp 640w, assets/successfulLearners/VDR_0199%201.webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Creative Pioneers</h4>
+                            <h3 class="learner-name">Creative Pioneers</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Future Leaders" src="assets/successfulLearners/VDR_0093%201.webp" alt="Future Leaders">
+                            <img title="Future Leaders" src="assets/successfulLearners/VDR_0093%201.webp" alt="Future Leaders" srcset="assets/successfulLearners/thumbs/VDR_0093-1-320.webp 320w, assets/successfulLearners/thumbs/VDR_0093-1-640.webp 640w, assets/successfulLearners/VDR_0093%201.webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Future Leaders</h4>
+                            <h3 class="learner-name">Future Leaders</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
                     <div class="learner-card">
                         <div class="learner-img-wrapper">
-                            <img title="Digital Trailblazers" src="assets/successfulLearners/image%20(4).webp" alt="Digital Trailblazers">
+                            <img title="Digital Trailblazers" src="assets/successfulLearners/image%20(4).webp" alt="Digital Trailblazers" srcset="assets/successfulLearners/thumbs/image-4-320.webp 320w, assets/successfulLearners/thumbs/image-4-640.webp 640w, assets/successfulLearners/image%20(4).webp 939w" sizes="(max-width: 600px) calc(50vw - 40px), (max-width: 800px) calc(33.3vw - 45px), (max-width: 1200px) calc(25vw - 50px), (max-width: 1600px) 248px, 348px" width="939" height="660" loading="lazy" decoding="async">
                         </div>
                         <div class="learner-info">
-                            <h4 class="learner-name">Digital Trailblazers</h4>
+                            <h3 class="learner-name">Digital Trailblazers</h3>
                             <p class="learner-role">People Gathered • Award Ceremony</p>
                         </div>
                     </div>
@@ -586,7 +643,7 @@
                         <!-- Slide 1 -->
                         <div class="story-card">
                             <div class="video-thumbnail" data-video-src="assets/stories/Pranab_Das.mp4">
-                                <video title="Alumni Story" src="assets/stories/Pranab_Das.mp4" preload="metadata" muted playsinline></video>
+                                <img title="Alumni Story" src="assets/stories/posters/Pranab_Das.webp" alt="Alumni story video: Pranab Das" width="800" height="450" loading="lazy" decoding="async">
                                 <div class="play-btn-overlay">
                                     <div class="play-btn-circle">
                                         <span class="play-icon">&#9654;</span>
@@ -597,14 +654,14 @@
                                 <p class="story-quote">"It was really fulfilling and everything for me to complete this course. And let's say the professors are extremely knowledgeable. They are going all the topics very well."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Pranab Das</h4>
+                                    <h3 class="person-name">Pranab Das</h3>
                                     <p class="person-title">AI CyberSecurity Program Course Taker</p>
                                 </div>
                             </div>
                         </div>
                         <div class="story-card">
                             <div class="video-thumbnail" data-video-src="assets/stories/Karuna_Turlapati.mp4">
-                                <video title="Alumni Story" src="assets/stories/Karuna_Turlapati.mp4" preload="metadata" muted playsinline></video>
+                                <img title="Alumni Story" src="assets/stories/posters/Karuna_Turlapati.webp" alt="Alumni story video: Karuna Turlapati" width="800" height="450" loading="lazy" decoding="async">
                                 <div class="play-btn-overlay">
                                     <div class="play-btn-circle">
                                         <span class="play-icon">&#9654;</span>
@@ -615,14 +672,14 @@
                                 <p class="story-quote">"The on site experience was good. I think if we add more sessions on site, it would have given us even more exposure is my only feedback. But otherwise the faculty, the content and everything was perfect."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Karuna Turlapati</h4>
+                                    <h3 class="person-name">Karuna Turlapati</h3>
                                     <p class="person-title">AI CyberSecurity Program Course Taker</p>
                                 </div>
                             </div>
                         </div>
                         <div class="story-card">
                             <div class="video-thumbnail" data-video-src="assets/stories/Praveen.mp4">
-                                <video title="Alumni Story" src="assets/stories/Praveen.mp4" preload="metadata" muted playsinline></video>
+                                <img title="Alumni Story" src="assets/stories/posters/Praveen.webp" alt="Alumni story video: Praveen" width="800" height="450" loading="lazy" decoding="async">
                                 <div class="play-btn-overlay">
                                     <div class="play-btn-circle">
                                         <span class="play-icon">&#9654;</span>
@@ -633,7 +690,7 @@
                                 <p class="story-quote">"Very well structured and we have a very good staff, and we got engaged in the theoretical and practical. And suddenly what I feel is like this I will boost my personal gain first."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Praveen</h4>
+                                    <h3 class="person-name">Praveen</h3>
                                     <p class="person-title">AI CyberSecurity Program Course Taker</p>
                                 </div>
                             </div>
@@ -652,7 +709,7 @@
                                 <p class="story-quote">"The practical labs on adversarial machine learning were game-changing. We've directly applied these techniques to strengthen our production ML pipeline security."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Arjun Mehta</h4>
+                                    <h3 class="person-name">Arjun Mehta</h3>
                                     <p class="person-title">Head of AI Security</p>
                                     <p class="person-company">NexGen Defence Labs</p>
                                 </div>
@@ -671,7 +728,7 @@
                                 <p class="story-quote">"Every module was designed with enterprise deployment in mind. The IIT Hyderabad faculty brought depth that you simply can't find in generic online courses."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Priya Sundaram</h4>
+                                    <h3 class="person-name">Priya Sundaram</h3>
                                     <p class="person-title">Senior Data Engineer</p>
                                     <p class="person-company">CloudStack Analytics</p>
                                 </div>
@@ -690,7 +747,7 @@
                                 <p class="story-quote">"The certification from IIT Hyderabad elevated my professional credibility overnight. The network of peers from this cohort is invaluable for career growth."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Rohan Kapoor</h4>
+                                    <h3 class="person-name">Rohan Kapoor</h3>
                                     <p class="person-title">CTO</p>
                                     <p class="person-company">SecureAI Solutions</p>
                                 </div>
@@ -710,7 +767,7 @@
                                 <p class="story-quote">"The deep-dive into federated learning and differential privacy was exactly the specialization our compliance team needed. Truly cutting-edge curriculum."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Meera Joshi</h4>
+                                    <h3 class="person-name">Meera Joshi</h3>
                                     <p class="person-title">Privacy Engineering Lead</p>
                                     <p class="person-company">DataShield Corp</p>
                                 </div>
@@ -729,7 +786,7 @@
                                 <p class="story-quote">"What sets this program apart is the real-world case studies. We analyzed actual breaches and built countermeasures — that hands-on approach is irreplaceable."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Sanjay Reddy</h4>
+                                    <h3 class="person-name">Sanjay Reddy</h3>
                                     <p class="person-title">Cybersecurity Architect</p>
                                     <p class="person-company">TrustLayer Systems</p>
                                 </div>
@@ -748,7 +805,7 @@
                                 <p class="story-quote">"The program's emphasis on ethical AI in cybersecurity aligned perfectly with our organizational values. It has fundamentally shaped our approach to responsible AI deployment."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Fatima Khan</h4>
+                                    <h3 class="person-name">Fatima Khan</h3>
                                     <p class="person-title">Director of AI Ethics</p>
                                     <p class="person-company">Horizon Governance</p>
                                 </div>
@@ -768,7 +825,7 @@
                                 <p class="story-quote">"From intrusion detection systems to adversarial training — the breadth and depth of this curriculum is unmatched. It gave me the confidence to lead our security transformation."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Nitin Patel</h4>
+                                    <h3 class="person-name">Nitin Patel</h3>
                                     <p class="person-title">VP of Information Security</p>
                                     <p class="person-company">FinGuard Technologies</p>
                                 </div>
@@ -787,7 +844,7 @@
                                 <p class="story-quote">"The campus immersion at IIT Hyderabad was a highlight. Meeting faculty in person and collaborating with peers created bonds and insights that online-only programs simply cannot replicate."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Lakshmi Rao</h4>
+                                    <h3 class="person-name">Lakshmi Rao</h3>
                                     <p class="person-title">Research Scientist</p>
                                     <p class="person-company">CyberNova Labs</p>
                                 </div>
@@ -806,7 +863,7 @@
                                 <p class="story-quote">"This program was the catalyst for my career pivot into AI-driven cybersecurity. The structured learning path and mentorship made all the difference in my professional journey."</p>
                                 <div class="story-divider"></div>
                                 <div class="story-person">
-                                    <h4 class="person-name">Amit Deshmukh</h4>
+                                    <h3 class="person-name">Amit Deshmukh</h3>
                                     <p class="person-title">AI Solutions Consultant</p>
                                     <p class="person-company">Strategos Digital</p>
                                 </div>
@@ -960,7 +1017,7 @@
         <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <img title="" src="assets/logoblack.png" alt="CyberAI Logo" class="footer-logo">
+                    <img title="" src="assets/logoblack.png" alt="CyberAI Logo" class="footer-logo" width="164" height="50" loading="lazy">
                     <p class="footer-description">
                         A leading innovator in transformative learning technologies, ensuring a seamless and impactful learning experience.
                     </p>
@@ -969,10 +1026,10 @@
                     <h3>Contact</h3>
                     <p>CyberAI, 4th Floor, Tower E, TRP Building, IITH, Kandi, Sanga Reddy, Telangana, 502284</p>
                     <div class="social-links">
-                      <a href="https://www.facebook.com/cyberaitech" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                      <a href="https://x.com/Cyberai_tech" aria-label="X"><i class="fab fa-twitter"></i></a>
-                      <a href="https://www.linkedin.com/company/cyberaitech/" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                      <a href="https://www.instagram.com/cyberai_tech/?next=%2F&hl=en" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                      <a href="https://www.facebook.com/cyberaitech" aria-label="Facebook"><svg viewBox="0 0 320 512" width="0.625em" height="1em" aria-hidden="true" focusable="false"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></a>
+                      <a href="https://x.com/Cyberai_tech" aria-label="X"><svg viewBox="0 0 512 512" width="1em" height="1em" aria-hidden="true" focusable="false"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a>
+                      <a href="https://www.linkedin.com/company/cyberaitech/" aria-label="LinkedIn"><svg viewBox="0 0 448 512" width="0.875em" height="1em" aria-hidden="true" focusable="false"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a>
+                      <a href="https://www.instagram.com/cyberai_tech/?next=%2F&hl=en" aria-label="Instagram"><svg viewBox="0 0 448 512" width="0.875em" height="1em" aria-hidden="true" focusable="false"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
                   </div>
                 </div>
             </div>

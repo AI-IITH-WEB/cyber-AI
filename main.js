@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             moduleContent.classList.add('module-content');
             moduleContent.innerHTML = moduleData.topics.map(topic => `
                 <div class="topic">
-                    <img src="assets/arrow.svg" alt="Arrow Icon">
+                    <img src="assets/arrow.svg" alt="Arrow Icon" width="13" height="13">
                     <p class="topic-content"><span class="topic-title">${topic.title}</span> — ${topic.description}(${moduleData.classMinutes} min)</p>
                 </div>
             `).join('');
@@ -372,9 +372,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Recalculate on window resize
+    // Recalculate on window resize. On the first slide the offset is 0 whatever the card width, so there's
+    // nothing to measure — skipping it avoids forcing a full-page layout while the page is still loading
+    // (mobile browsers fire a resize during load).
     window.addEventListener('resize', function() {
-        goToSlide(currentSlide);
+        if (currentSlide !== 0) {
+            goToSlide(currentSlide);
+        }
     });
 });
 
@@ -511,19 +515,19 @@ const ENROLL_TALLY_MARKUP = `
 const ENROLL_FORM_MARKUP = `
                     <form class="enroll-form" id="enrollForm">
                         <div class="enroll-field">
-                            <i class="fas fa-user" aria-hidden="true"></i>
+                            <svg viewBox="0 0 448 512" width="0.875em" height="1em" aria-hidden="true" focusable="false"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"/></svg>
                             <input type="text" name="name" placeholder="Your name" aria-label="Your name" autocomplete="name" minlength="2" maxlength="100" pattern=".*\\S.*" title="Enter your name" required>
                         </div>
                         <div class="enroll-field">
-                            <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                            <svg viewBox="0 0 512 512" width="1em" height="1em" aria-hidden="true" focusable="false"><path d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z"/></svg>
                             <input type="tel" name="phone" placeholder="Phone Number" aria-label="Phone Number" autocomplete="tel" maxlength="20" pattern="\\+?(?:[0-9][ \\-]?){9,14}[0-9]" title="Enter a valid phone number (10–15 digits, country code optional)" required>
                         </div>
                         <div class="enroll-field">
-                            <i class="fas fa-edit" aria-hidden="true"></i>
+                            <svg viewBox="0 0 576 512" width="1.125em" height="1em" aria-hidden="true" focusable="false"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"/></svg>
                             <input type="text" name="designation" placeholder="Designation" aria-label="Designation" autocomplete="organization-title" maxlength="100" pattern=".*\\S.*" title="Enter your designation" required>
                         </div>
                         <div class="enroll-field">
-                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <svg viewBox="0 0 512 512" width="1em" height="1em" aria-hidden="true" focusable="false"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>
                             <input type="email" name="email" placeholder="Email Id" aria-label="Email Id" autocomplete="email" maxlength="254" pattern="[^@\\s]+@[^@\\s]+\\.[^@\\s]+" title="Enter a valid email address, e.g. name@example.com" required>
                         </div>
                         <p class="enroll-form-error" id="enrollFormError" role="alert" hidden></p>
@@ -618,6 +622,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // so GTM can't see it otherwise). In GTM, trigger on Custom Event "enroll_form_submit".
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: 'enroll_form_submit' });
+        // index.html loads its tag scripts on the visitor's first interaction with the page; typing in the Tally
+        // form happens inside its iframe and doesn't count, so load them now to send this conversion right away
+        if (typeof window.loadTagsNow === 'function') {
+            window.loadTagsNow();
+        }
 
         enrollPanel.style.minHeight = enrollPanel.offsetHeight + 'px';
         enrollFormView.hidden = true;
@@ -731,7 +740,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (ENROLL_AUTO_OPEN && !wasDismissed()) {
-        openModal();
+        // Opens right after the page's first paint rather than before it: adding the Tally iframe and focusing
+        // it forces a full layout, which would otherwise hold back the first render (PageSpeed: LCP, TBT).
+        // requestAnimationFrame runs just before the next paint; the setTimeout inside it, just after.
+        requestAnimationFrame(function() {
+            setTimeout(function() {
+                if (!enrollModal.classList.contains('is-open') && !wasDismissed()) {
+                    openModal();
+                }
+            }, 0);
+        });
     }
 
     // The rest only applies to the custom form (not rendered when the Tally form is used)
