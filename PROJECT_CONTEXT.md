@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md — CyberAI Website Master Context & Tracking File
 
-> **Last Updated:** 2026-08-24
+> **Last Updated:** 2026-11-10
 > **Analyst:** Lead Web Developer / UI-UX Architect / Technical PM
 > **Domain:** `aicybercourse.ai.iith.ac.in`
 > **Repository:** `cyber-AI`
@@ -20,7 +20,7 @@
 | **Icons** | Font Awesome 5.15.4 (CDN) | Used for social-media icons in footer only |
 | **Forms** | Tally.so (embedded iframe) | Registration form on `register.html` only; Tally embed script on most pages |
 | **Forms** | Google Apps Script → Google Form | "Enroll Now" modal — custom HTML form POSTs JSON to an Apps Script web app (deployed from the enroll form owner's account), which records a response in the enroll Google Form and replies `{ok}`; URL in `ENROLL_ENDPOINT` (`main.js`) |
-| **Analytics** | Google Analytics (GA4: `G-KWDYBFBBNX`), GTM (`GTM-PLBRZSKP`), Meta Pixel (`1598215347533453`) | Duplicated in head of every HTML file (not centralized) |
+| **Analytics** | Google Analytics (GA4: `G-KWDYBFBBNX`), GTM (`GTM-PLBRZSKP`, `GTM-NNLCB9RF`, `GTM-M5X6STR5`), Meta Pixel (`1598215347533453`), OpenAI Ads pixel (`D8nHwhhHMM34BQfMXRkJHV`; index, about, terms, register) | Tag snippets duplicated in head of every HTML file; **event tracking is centralized in `main.js`** — see 2.6 |
 | **Hosting** | GitHub Pages | `CNAME` points to `aicybercourse.ai.iith.ac.in` |
 | **Assets** | SVG-heavy (logos, icons, backgrounds, illustrations), PNG for photos/certificates | Two asset directories: `assets/` and `aboutassets/` |
 
@@ -155,6 +155,49 @@
 | Brochure download | Links to `CyberAI-brochure-v4.pdf` | Active (6 brochure versions in assets) |
 | Certificate pages | 23 individual student pages (`AICS202501-23.html`) | Active, each ~228 lines |
 | Faculty | 3 profiles (Dr. Karthik P N, Dr. Konda Reddy Mopuri, Dr. Saurabh Kumar) | About page only |
+
+### 2.6 Analytics Event Map (2026-11-10)
+
+**Why it was added:** the team saw visits but no enrollments. The enroll submit was a bare `dataLayer.push({event: 'enroll_form_submit'})`, which only GTM can see. GA4 is configured directly in each page's head (not through GTM), so it never got the enrollment, and the Meta / OpenAI pixels never got a conversion at all (only `PageView` / `init`).
+
+**How it works:** `trackEvent(name, params)` in `main.js` sends each event once as `gtag('event', name, params)`:
+- **GA4** `G-KWDYBFBBNX` records it directly.
+- **GTM** (`GTM-PLBRZSKP`, `GTM-NNLCB9RF`, `GTM-M5X6STR5`) sees it as a **Custom Event** with the same name. Parameters are Data Layer Variables `eventModel.<param>` (e.g. `eventModel.form_name`).
+- **Meta Pixel** / **OpenAI pixel** get the events listed in `AD_PIXEL_EVENTS` (same event ID on both, for a future Conversions API). The OpenAI pixel is on index, about, terms and register (the pages with a form).
+- No personal data is ever sent. The Tally submit payload holds the answers; only `form_id` / `form_name` go out. mailto addresses aren't sent.
+- index.html lazy-loads its tag scripts (PageSpeed). A form submit loads them at once (`loadTagsNow`). A link clicked before they've loaded has its navigation held until the event is sent (≤ 1 s, `tagScriptsPending` / `whenTagScriptsLoaded`). register.html waits for the conversion (≤ 1 s) before redirecting to `thankyou.html`.
+- **Debug:** open any page with `?analytics_debug=1`. Each event is logged to the console and shows in GA4 → Admin → DebugView for the session. `?analytics_debug=0` turns it off.
+
+| Event | When | Key params | Meta / OpenAI |
+|-------|------|-----------|---------------|
+| `enroll_modal_open` | Enroll modal opens | `modal_trigger` (`auto` / `enroll_tab`), `form_provider` | `EnrollModalOpen` (custom) |
+| `enroll_form_load` | Tally enroll form rendered | `form_id`, `form_name`, `form_provider` | — |
+| `enroll_form_page_view` | Tally form page shown | `form_page` | — |
+| `enroll_form_start` / `enroll_form_error` | Custom (non-Tally) form only: first keystroke / validation, timeout or submit failure | `error_type`, `form_field` | — |
+| **`enroll_form_submit`** | Enrollment submitted (name kept for existing GTM triggers) | `form_name`, `form_id`, `form_provider` | **`Lead`** / **`lead_created`** |
+| **`generate_lead`** | With every form submit (GA4 lead reports) | `lead_source` (`enroll_form` / `register_form`) | — |
+| `enroll_thankyou_view` | Thank-you popup shown (`display: modal`) or `thankyou-enroll.html` loaded (`display: page`) | `display` | — |
+| `enroll_modal_close` | Modal closed | `close_method` (`close_button` / `thankyou_button` / `backdrop` / `escape_key`), `modal_stage` (`form` / `thank_you`), `open_seconds` | — |
+| `register_form_load` / `register_form_page_view` | Tally registration form on `register.html` | `form_id`, `form_page` | — |
+| **`register_form_submit`** | Registration submitted | `form_name`, `form_id` | **`CompleteRegistration`** / **`registration_completed`** |
+| `register_thankyou_view` | `thankyou.html` loaded | `display` | — |
+| `cta_click` | Register Now / Apply Now / fee box / Back to Home | `cta_text`, `cta_destination` (`register` / `home`), `click_location` | `CTAClick` (custom) |
+| `brochure_download` | Brochure PDF link | `file_name`, `click_location` | `BrochureDownload` (custom) |
+| `nav_click` / `link_click` | Navbar links / any other link | `link_text`, `link_url`, `click_location`, `outbound` | — |
+| `social_click` / `contact_click` | Footer social icons / mailto, tel | `social_network` / `contact_method` | — / `Contact` |
+| `course_phase_select`, `faq_open`, `learner_image_view`, `alumni_slide_change`, `nav_menu_toggle` | Course weekend tabs, FAQ opened, learner photo, slider dots, mobile menu | `phase_number`, `faq_question`, `image_title`, `slide_number`, `menu_state` | — |
+| `video_start` / `video_progress` / `video_complete` | Alumni story videos (25/50/75 %) | `video_title`, `video_percent`, `video_duration` | — |
+| `section_view` | A section's top reaches the upper half of the screen (once per page) | `section_id`, `section_title` | — |
+| `scroll_depth` | 25/50/75/100 % (GA4's own scroll event can't fire on index: `<body>` is the scroll container) | `percent_scrolled` | — |
+
+`click_location` = `navbar`, `footer`, `enroll_modal`, `hero`, `thank_you`, or the section id (`course-offerings`, `fee`, …).
+
+**One-time setup in the dashboards (not in code):**
+1. **GA4 → Admin → Events → Key events:** mark `enroll_form_submit` and `register_form_submit`, or `generate_lead` instead. Not both, or each conversion counts twice.
+2. **GA4 → Admin → Custom definitions:** add event-scoped dimensions for the params you want in reports. GA4 shows unregistered params only in DebugView. Start with `form_name`, `modal_trigger`, `close_method`, `modal_stage`, `cta_destination`, `click_location`, `section_id`, `lead_source`; add a metric for `open_seconds`.
+3. **GTM:** if any container already has a GA4 Event tag that forwards `enroll_form_submit` to `G-KWDYBFBBNX`, pause it, because GA4 now gets the event directly. Google Ads / other conversion tags can keep the same Custom Event trigger.
+4. **Meta Events Manager:** `Lead` and `CompleteRegistration` arrive as standard events. Check `register.html`'s Tally embed (`formEventsForwarding=1`, Tally's "Track form events") isn't also sending a registration event to the pixel.
+5. **OpenAI pixel:** every snippet has `debug: true` (as first pasted). Set it to `false` once conversions show in OpenAI Ads Manager.
 
 ---
 

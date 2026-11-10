@@ -13,6 +13,148 @@ function toggleMenu() {
     document.querySelector('.nav-links').classList.toggle('active');
 }
 
+// Analytics — every event is sent as one Google tag event, gtag('event', name, params), which reaches:
+// - Google Analytics 4 (G-KWDYBFBBNX, configured in each page's head), where it is recorded as-is;
+// - each Google Tag Manager container (GTM-PLBRZSKP, GTM-NNLCB9RF, GTM-M5X6STR5), where it is a Custom Event of
+//   the same name, its parameters readable with Data Layer Variables named "eventModel.<param>".
+// The events ad campaigns optimise for are also sent to the Meta Pixel and the OpenAI Ads pixel (AD_PIXEL_EVENTS).
+// Never put personal data (names, emails, phone numbers, form answers) in the parameters: Google's and Meta's terms
+// forbid it. Open any page with ?analytics_debug=1 to log each event to the console and see it in GA4 DebugView
+// for the rest of the browser session (?analytics_debug=0 turns it off).
+// The event list is in PROJECT_CONTEXT.md (section 2.6).
+const ANALYTICS_CALLBACK_TIMEOUT_MS = 1000;
+const ANALYTICS_DEBUG_KEY = 'analyticsDebug';
+
+// GA4 event name → Meta Pixel event ([fbq method, event name]) and/or OpenAI Ads pixel standard event.
+// Meta standard events (track) feed ad optimisation; trackCustom ones are for custom audiences and conversions.
+// Both pixels get the same event ID, ready for de-duplication if a server-side Conversions API is added later.
+const AD_PIXEL_EVENTS = {
+    enroll_form_submit: { meta: ['track', 'Lead'], openai: 'lead_created' },
+    register_form_submit: { meta: ['track', 'CompleteRegistration'], openai: 'registration_completed' },
+    enroll_modal_open: { meta: ['trackCustom', 'EnrollModalOpen'] },
+    cta_click: { meta: ['trackCustom', 'CTAClick'] },
+    brochure_download: { meta: ['trackCustom', 'BrochureDownload'] },
+    contact_click: { meta: ['track', 'Contact'] }
+};
+
+// sessionStorage can throw when storage is blocked — then debug mode only lasts for the page with the parameter
+const analyticsDebug = (function() {
+    const param = /[?&]analytics_debug=([01])(?:&|$)/.exec(window.location.search);
+    try {
+        if (param) {
+            sessionStorage.setItem(ANALYTICS_DEBUG_KEY, param[1]);
+        }
+        return sessionStorage.getItem(ANALYTICS_DEBUG_KEY) === '1';
+    } catch (err) {
+        return !!param && param[1] === '1';
+    }
+})();
+
+// Same as the gtag() each page defines in its head (gtag.js and GTM only read Arguments objects from dataLayer).
+// Defined here too because some pages load main.js before that snippet.
+function gtagPush() {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(arguments);
+}
+
+// Drops empty values; GA4 keeps at most 100 characters of a parameter value
+function cleanEventParams(params) {
+    const clean = {};
+    Object.keys(params || {}).forEach(function(key) {
+        let value = params[key];
+        if (value === undefined || value === null || value === '' || (typeof value === 'number' && isNaN(value))) return;
+        if (typeof value === 'string') {
+            value = value.replace(/\s+/g, ' ').trim().slice(0, 100);
+        }
+        clean[key] = value;
+    });
+    return clean;
+}
+
+// The Meta Pixel is on every page; the OpenAI pixel only on pages with a form (index, about, terms, register).
+// Both queue calls made before their script has loaded, like gtag.
+function sendToAdPixels(name, params) {
+    const pixel = AD_PIXEL_EVENTS[name];
+    if (!pixel) return;
+    const eventId = name + '.' + Date.now() + '.' + Math.random().toString(36).slice(2, 10);
+    try {
+        if (pixel.meta && typeof window.fbq === 'function') {
+            window.fbq(pixel.meta[0], pixel.meta[1], Object.assign({}, params), { eventID: eventId });
+        }
+        if (pixel.openai && typeof window.oaiq === 'function') {
+            window.oaiq('measure', pixel.openai, { type: 'customer_action' }, { event_id: eventId });
+        }
+    } catch (err) {
+        // A pixel failing must never break the page or the Google events
+        console.error('Analytics: ad pixel event failed.', err);
+    }
+}
+
+// callback (optional) runs once the event has been sent, or after ANALYTICS_CALLBACK_TIMEOUT_MS when the tag
+// scripts are slow or blocked — for code that leaves the page right after
+function trackEvent(name, params, callback) {
+    const data = cleanEventParams(params);
+    sendToAdPixels(name, data);
+    if (analyticsDebug) {
+        data.debug_mode = true;
+        console.info('[analytics]', name, data);
+    }
+    if (typeof callback === 'function') {
+        let called = false;
+        const done = function() {
+            if (called) return;
+            called = true;
+            callback();
+        };
+        data.event_callback = done;
+        data.event_timeout = ANALYTICS_CALLBACK_TIMEOUT_MS;
+        setTimeout(done, ANALYTICS_CALLBACK_TIMEOUT_MS);
+    }
+    gtagPush('event', name, data);
+}
+
+// Form submissions are the site's conversions. Each sends <form>_form_submit (GTM has triggered on
+// enroll_form_submit since before this event layer, so that name is kept) plus GA4's recommended generate_lead,
+// which feeds GA4's lead reports — mark one of the two as the key event, not both.
+function trackFormSubmit(formName, params, callback) {
+    const data = Object.assign({ form_name: formName }, params);
+    trackEvent(formName + '_form_submit', data);
+    trackEvent('generate_lead', Object.assign({ lead_source: formName + '_form' }, data), callback);
+    // index.html downloads its tag scripts on the visitor's first interaction with the page; typing in a Tally form
+    // happens inside its iframe and doesn't count, so start the download now to send the conversion right away
+    if (typeof window.loadTagsNow === 'function') {
+        window.loadTagsNow();
+    }
+}
+
+// Tally posts its events to the page as JSON strings: { event: 'Tally.FormLoaded' | 'Tally.FormPageView' |
+// 'Tally.FormSubmitted', payload: { formId, page, ... } }. Returns the parsed message, or null for anything else.
+function parseTallyMessage(event) {
+    if (event.origin !== 'https://tally.so' || typeof event.data !== 'string') return null;
+    try {
+        const message = JSON.parse(event.data);
+        return message && typeof message.event === 'string' ? message : null;
+    } catch (err) {
+        return null;
+    }
+}
+
+// Records a Tally form's load, page views and submission. The submit payload also holds the respondent's answers;
+// they are deliberately not sent. onSubmitTracked runs once a submission has been sent (see trackEvent's callback).
+// Also called by register.html.
+function trackTallyMessage(formName, message, onSubmitTracked) {
+    const payload = message.payload || {};
+    const params = { form_name: formName, form_provider: 'tally', form_id: payload.formId };
+
+    if (message.event === 'Tally.FormLoaded') {
+        trackEvent(formName + '_form_load', params);
+    } else if (message.event === 'Tally.FormPageView') {
+        trackEvent(formName + '_form_page_view', Object.assign({ form_page: Number(payload.page) }, params));
+    } else if (message.event === 'Tally.FormSubmitted') {
+        trackFormSubmit(formName, params, onSubmitTracked);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const phases = document.querySelectorAll('.phase');
     const courseModulesContainer = document.querySelector('.course-modules');
@@ -255,6 +397,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (videoIframe && videoUrl) {
             videoIframe.src = videoUrl;
         }
+        // The YouTube embed has no JS API enabled, so opening the player is all that can be recorded
+        trackEvent('video_open', { video_provider: 'youtube', video_url: videoUrl, click_location: 'hero' });
     });
 
     function closeVideo() {
@@ -574,10 +718,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const enrollThankYouClose = document.getElementById('enrollThankYouClose');
     const enrollTally = document.getElementById('enrollTally');
     let enrollTallyFrame = null;
+    // Analytics state: when the modal was last opened, and whether the visitor has started typing in the custom form
+    let enrollOpenedAt = 0;
+    let enrollFormStarted = false;
+    const ENROLL_FORM_PROVIDER = ENROLL_TALLY_EMBED_URL ? 'tally' : 'custom';
+    const ENROLL_CUSTOM_FORM_PARAMS = { form_name: 'enroll', form_provider: 'custom', form_id: 'enrollForm' };
 
     if (!enrollModal || !openEnrollModal) return;
 
-    function openModal() {
+    // trigger: 'auto' (opened on page load) or 'enroll_tab' (the Enroll Now tab)
+    function openModal(trigger) {
         enrollModal.classList.add('is-open');
         document.documentElement.classList.add('enroll-modal-open');
         loadTallyForm();
@@ -587,9 +737,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (firstInput) {
             firstInput.focus();
         }
+
+        enrollOpenedAt = Date.now();
+        trackEvent('enroll_modal_open', { modal_trigger: trigger, form_provider: ENROLL_FORM_PROVIDER });
     }
 
-    function closeModal() {
+    // method: 'close_button', 'thankyou_button', 'backdrop' or 'escape_key'
+    function closeModal(method) {
+        if (!enrollModal.classList.contains('is-open')) return;
+        trackEvent('enroll_modal_close', {
+            close_method: method,
+            modal_stage: enrollThankYou && !enrollThankYou.hidden ? 'thank_you' : 'form',
+            open_seconds: Math.round((Date.now() - enrollOpenedAt) / 1000),
+            form_provider: ENROLL_FORM_PROVIDER
+        });
+
         enrollModal.classList.remove('is-open');
         document.documentElement.classList.remove('enroll-modal-open');
         resetEnrollView();
@@ -614,19 +776,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Swap the form for the thank-you view, keeping the panel at the same height
+    // Swap the form for the thank-you view, keeping the panel at the same height.
+    // The submission itself is recorded by the caller (enroll_form_submit + generate_lead, see trackFormSubmit).
     function showThankYou() {
         if (!enrollFormView || !enrollThankYou || !enrollThankYou.hidden) return;
 
-        // Tells Google Tag Manager an enrollment was submitted (the thank-you view isn't a page load,
-        // so GTM can't see it otherwise). In GTM, trigger on Custom Event "enroll_form_submit".
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: 'enroll_form_submit' });
-        // index.html loads its tag scripts on the visitor's first interaction with the page; typing in the Tally
-        // form happens inside its iframe and doesn't count, so load them now to send this conversion right away
-        if (typeof window.loadTagsNow === 'function') {
-            window.loadTagsNow();
-        }
+        // The thank-you view isn't a page load, so GA4 and GTM can't see it without this event
+        trackEvent('enroll_thankyou_view', { display: 'modal', form_provider: ENROLL_FORM_PROVIDER });
 
         enrollPanel.style.minHeight = enrollPanel.offsetHeight + 'px';
         enrollFormView.hidden = true;
@@ -644,6 +800,7 @@ document.addEventListener('DOMContentLoaded', function() {
         enrollFormView.hidden = false;
         if (enrollForm) {
             enrollForm.reset();
+            enrollFormStarted = false;
         }
         // Tally shows its own done page after a submit — reload it for a blank form
         if (enrollTallyFrame && enrollTallyFrame.src) {
@@ -701,40 +858,46 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(loadWithoutScript, 8000);
     }
 
-    openEnrollModal.addEventListener('click', openModal);
+    openEnrollModal.addEventListener('click', function() {
+        openModal('enroll_tab');
+    });
 
     if (closeEnrollModal) {
-        closeEnrollModal.addEventListener('click', closeModal);
+        closeEnrollModal.addEventListener('click', function() {
+            closeModal('close_button');
+        });
     }
 
     if (enrollThankYouClose) {
-        enrollThankYouClose.addEventListener('click', closeModal);
+        enrollThankYouClose.addEventListener('click', function() {
+            closeModal('thankyou_button');
+        });
     }
 
     enrollModal.addEventListener('click', function(event) {
         if (event.target === enrollModal) {
-            closeModal();
+            closeModal('backdrop');
         }
     });
 
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape' && enrollModal.classList.contains('is-open')) {
-            closeModal();
+            closeModal('escape_key');
         }
     });
 
-    // Tally posts its events to the page as JSON strings — swap in the thank-you view once the form is submitted
+    // Records the Tally form's events, and swaps in the thank-you view once the form is submitted.
+    // Ignored while the modal is closed: closing it after a submit reloads the form in the background.
     window.addEventListener('message', function(event) {
-        if (event.origin !== 'https://tally.so' || typeof event.data !== 'string') return;
-        if (!enrollModal.classList.contains('is-open')) return;
+        const message = parseTallyMessage(event);
+        if (!message || !enrollModal.classList.contains('is-open')) return;
 
-        let message;
-        try {
-            message = JSON.parse(event.data);
-        } catch (err) {
-            return;
-        }
-        if (message && message.event === 'Tally.FormSubmitted') {
+        const isSubmit = message.event === 'Tally.FormSubmitted';
+        // A repeated submit message while the thank-you view is already up isn't a new enrollment
+        if (isSubmit && enrollThankYou && !enrollThankYou.hidden) return;
+
+        trackTallyMessage('enroll', message);
+        if (isSubmit) {
             showThankYou();
         }
     });
@@ -746,7 +909,7 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(function() {
             setTimeout(function() {
                 if (!enrollModal.classList.contains('is-open') && !wasDismissed()) {
-                    openModal();
+                    openModal('auto');
                 }
             }, 0);
         });
@@ -754,6 +917,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // The rest only applies to the custom form (not rendered when the Tally form is used)
     if (!enrollForm) return;
+
+    // First keystroke after the form is shown (again after each submission)
+    enrollForm.addEventListener('input', function() {
+        if (enrollFormStarted) return;
+        enrollFormStarted = true;
+        trackEvent('enroll_form_start', ENROLL_CUSTOM_FORM_PARAMS);
+    });
+
+    // The browser's built-in validation rejected a field on submit (fires once per invalid field; no values sent)
+    enrollForm.addEventListener('invalid', function(event) {
+        trackEvent('enroll_form_error', Object.assign({
+            error_type: 'validation',
+            form_field: event.target.name
+        }, ENROLL_CUSTOM_FORM_PARAMS));
+    }, true);
 
     // Runs only once the browser's built-in validation (required, pattern, type=email) has passed
     enrollForm.addEventListener('submit', function(event) {
@@ -763,6 +941,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!ENROLL_ENDPOINT) {
             console.warn('Enroll form: ENROLL_ENDPOINT is not configured.');
             showFormError('Enrollment is not open yet. Please try again later.');
+            trackEvent('enroll_form_error', Object.assign({ error_type: 'not_configured' }, ENROLL_CUSTOM_FORM_PARAMS));
             return;
         }
 
@@ -794,15 +973,287 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!result.ok) {
                     throw new Error(result.error);
                 }
+                trackFormSubmit('enroll', ENROLL_CUSTOM_FORM_PARAMS);
                 showThankYou();
             })
             .catch(function(err) {
                 console.error('Enroll form: submission failed.', err);
                 showFormError('Could not submit your details. Please check your connection and try again.');
+                trackEvent('enroll_form_error', Object.assign({
+                    error_type: err && err.name === 'AbortError' ? 'timeout' : 'submit_failed'
+                }, ENROLL_CUSTOM_FORM_PARAMS));
             })
             .finally(function() {
                 clearTimeout(timeoutId);
                 setSubmitting(false);
             });
+    });
+});
+
+// Analytics — page interactions, on every page. Uses one delegated click listener (so it also covers the nav and
+// footer that nav.js injects), and runs after each feature's own click handler, so it sees the updated state.
+document.addEventListener('DOMContentLoaded', function() {
+    const SCROLL_DEPTH_MARKS = [25, 50, 75, 100];
+    const VIDEO_PROGRESS_MARKS = [25, 50, 75];
+
+    // Thank-you pages name their event on <body data-analytics-event="...">
+    const pageEvent = document.body.getAttribute('data-analytics-event');
+    if (pageEvent) {
+        trackEvent(pageEvent, { display: 'page' });
+    }
+
+    function elementText(el) {
+        const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+        if (text) return text;
+        const img = el.querySelector('img');
+        return el.getAttribute('aria-label') || el.getAttribute('title') || (img && (img.alt || img.title)) || '';
+    }
+
+    // Where on the page the click happened: navbar, footer, enroll_modal, a section id (fee, faqs, ...), hero, page
+    function clickLocation(el) {
+        if (el.closest('#enrollModal')) return 'enroll_modal';
+        if (el.closest('.navbar')) return 'navbar';
+        if (el.closest('footer')) return 'footer';
+        const section = el.closest('section[id]');
+        if (section) return section.id;
+        if (el.closest('.hero')) return 'hero';
+        if (el.closest('.thankyou-popup')) return 'thank_you';
+        return 'page';
+    }
+
+    // A same-tab navigation to another page (not a new tab, download, #anchor on this page, mailto: or tel:)
+    function isPageNavigation(event, link) {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+        if ((link.target && link.target !== '_self') || link.hasAttribute('download')) return false;
+        if (link.protocol !== 'http:' && link.protocol !== 'https:') return false;
+        const samePage = link.host === window.location.host && link.pathname === window.location.pathname &&
+            link.search === window.location.search;
+        return !(samePage && link.hash);
+    }
+
+    // index.html downloads its tag scripts only after the visitor's first interaction (see its head). A link
+    // clicked before they've arrived would unload the page with the click's event still unsent, so hold that
+    // navigation until the event is sent or the scripts have settled (loaded or failed) — at most
+    // ANALYTICS_CALLBACK_TIMEOUT_MS. The other pages load their tags right away, so this never kicks in there.
+    function trackLinkClick(event, link, name, params) {
+        const holdNavigation = typeof window.tagScriptsPending === 'function' && window.tagScriptsPending() &&
+            isPageNavigation(event, link);
+        if (!holdNavigation) {
+            trackEvent(name, params);
+            return;
+        }
+        event.preventDefault();
+        let navigated = false;
+        function navigate() {
+            if (navigated) return;
+            navigated = true;
+            window.location.href = link.href;
+        }
+        trackEvent(name, params, navigate);
+        window.whenTagScriptsLoaded(function() {
+            setTimeout(navigate, 300);
+        });
+    }
+
+    document.addEventListener('click', function(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        const location = clickLocation(target);
+
+        // Course offerings — weekend tabs
+        const phase = target.closest('.phase');
+        if (phase) {
+            const title = phase.querySelector('.phase-title');
+            trackEvent('course_phase_select', {
+                phase_number: Number(phase.getAttribute('data-phase')),
+                phase_title: title ? title.textContent : ''
+            });
+            return;
+        }
+
+        // FAQ — only opening counts (the accordion has already toggled .active)
+        const faqQuestion = target.closest('.faq-question');
+        if (faqQuestion) {
+            const item = faqQuestion.closest('.faq-item');
+            if (item && item.classList.contains('active')) {
+                const question = faqQuestion.querySelector('h3');
+                trackEvent('faq_open', { faq_question: question ? question.textContent : '' });
+            }
+            return;
+        }
+
+        // Successful learners — photo opened in the image modal
+        const learnerImage = target.closest('.learner-img-wrapper');
+        if (learnerImage) {
+            const img = learnerImage.querySelector('img');
+            trackEvent('learner_image_view', { image_title: img ? img.alt : '' });
+            return;
+        }
+
+        // Alumni stories — slider dots
+        const storyDot = target.closest('.story-dot');
+        if (storyDot) {
+            trackEvent('alumni_slide_change', { slide_number: Number(storyDot.getAttribute('data-slide')) + 1 });
+            return;
+        }
+
+        if (target.closest('#loadMoreLearners')) {
+            trackEvent('learners_load_more', {});
+            return;
+        }
+
+        // Mobile menu (toggleMenu has already run)
+        if (target.closest('.hamburger')) {
+            const navLinks = document.querySelector('.nav-links');
+            trackEvent('nav_menu_toggle', {
+                menu_state: navLinks && navLinks.classList.contains('active') ? 'open' : 'close'
+            });
+            return;
+        }
+
+        // "Apply Now" in the countdown card is a <button> that navigates from its onclick
+        const registerButton = target.closest('.register-btn');
+        if (registerButton) {
+            trackEvent('cta_click', {
+                cta_text: elementText(registerButton),
+                cta_destination: 'register',
+                click_location: location,
+                link_url: new URL('./register.html', window.location.href).href
+            });
+            return;
+        }
+
+        const link = target.closest('a[href]');
+        if (!link) return;
+        const href = link.getAttribute('href') || '';
+        if (href === '#' || /^javascript:/i.test(href)) return;
+        const linkParams = { link_text: elementText(link), link_url: link.href, click_location: location };
+
+        if (/\.pdf$/i.test(link.pathname)) {
+            trackLinkClick(event, link, 'brochure_download', Object.assign({
+                file_name: decodeURIComponent(link.pathname.split('/').pop())
+            }, linkParams));
+        } else if (link.closest('.social-links')) {
+            trackEvent('social_click', Object.assign({ social_network: link.getAttribute('aria-label') }, linkParams));
+        } else if (link.protocol === 'mailto:' || link.protocol === 'tel:') {
+            // The address itself isn't sent
+            trackEvent('contact_click', {
+                contact_method: link.protocol === 'mailto:' ? 'email' : 'phone',
+                click_location: location
+            });
+        } else if (/register\.html$/i.test(link.pathname) || link.classList.contains('home-btn')) {
+            trackLinkClick(event, link, 'cta_click', Object.assign({
+                cta_text: linkParams.link_text,
+                cta_destination: link.classList.contains('home-btn') ? 'home' : 'register'
+            }, linkParams));
+        } else if (location === 'navbar') {
+            trackLinkClick(event, link, 'nav_click', linkParams);
+        } else {
+            trackLinkClick(event, link, 'link_click', Object.assign({
+                outbound: link.hostname !== window.location.hostname
+            }, linkParams));
+        }
+    });
+
+    // Section reached — once per section per page, when its top enters the upper half of the screen.
+    // (IntersectionObserver works whichever element scrolls; on index.html that's <body>, not the window.)
+    const sections = document.querySelectorAll('section[id]');
+    if ('IntersectionObserver' in window && sections.length) {
+        const sectionObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (!entry.isIntersecting) return;
+                sectionObserver.unobserve(entry.target);
+                const heading = entry.target.querySelector('h2');
+                trackEvent('section_view', {
+                    section_id: entry.target.id,
+                    section_title: heading ? heading.textContent : ''
+                });
+            });
+        }, { rootMargin: '0px 0px -50% 0px' });
+        sections.forEach(function(section) {
+            sectionObserver.observe(section);
+        });
+    }
+
+    // Scroll depth — 25/50/75/100 %, once each per page. GA4's built-in scroll event only watches the window, and
+    // index.html scrolls <body> instead (html and body are height: 100% with overflow-x: hidden), so it never fires
+    // there. Scroll events don't bubble, hence the capture-phase listener; other scrolling elements (modals, the
+    // slider) are ignored.
+    let nextScrollMark = 0;
+    let scrollCheckQueued = false;
+    document.addEventListener('scroll', function(event) {
+        if (scrollCheckQueued || nextScrollMark >= SCROLL_DEPTH_MARKS.length) return;
+        const t = event.target;
+        let scroller = null;
+        if (t === document || t === document.documentElement) {
+            scroller = document.scrollingElement || document.documentElement;
+        } else if (t === document.body) {
+            scroller = document.body;
+        }
+        if (!scroller) return;
+
+        scrollCheckQueued = true;
+        requestAnimationFrame(function() {
+            scrollCheckQueued = false;
+            const scrollable = scroller.scrollHeight - scroller.clientHeight;
+            if (scrollable <= 0) return;
+            // Within 2px of the end counts as the bottom (fractional scroll positions on high-DPI screens)
+            const percent = scrollable - scroller.scrollTop <= 2 ? 100 : Math.round(scroller.scrollTop / scrollable * 100);
+            while (nextScrollMark < SCROLL_DEPTH_MARKS.length && percent >= SCROLL_DEPTH_MARKS[nextScrollMark]) {
+                trackEvent('scroll_depth', { percent_scrolled: SCROLL_DEPTH_MARKS[nextScrollMark] });
+                nextScrollMark++;
+            }
+        });
+    }, { capture: true, passive: true });
+
+    // Self-hosted videos (alumni stories modal) — GA4's built-in video tracking only covers YouTube.
+    // Same event and parameter names as GA4's YouTube events. Counted again each time a video is (re)loaded:
+    // load() fires 'emptied' before the 'play' of the play() that follows it ('loadstart' can come after 'play').
+    function videoTitle(video) {
+        const source = video.querySelector('source');
+        const path = (source && source.getAttribute('src')) || video.getAttribute('src') || '';
+        const thumbnail = Array.prototype.find.call(document.querySelectorAll('[data-video-src]'), function(el) {
+            return el.getAttribute('data-video-src') === path;
+        });
+        const card = thumbnail && thumbnail.closest('.story-card');
+        const person = card && card.querySelector('.person-name');
+        if (person) return person.textContent;
+        return path.split('/').pop().replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+    }
+
+    document.querySelectorAll('video').forEach(function(video) {
+        let started = false;
+        let progressMarks = VIDEO_PROGRESS_MARKS.slice();
+
+        function videoParams(extra) {
+            return Object.assign({
+                video_provider: 'self-hosted',
+                video_title: videoTitle(video),
+                video_url: video.currentSrc,
+                video_duration: Math.round(video.duration),
+                video_current_time: Math.round(video.currentTime)
+            }, extra);
+        }
+
+        video.addEventListener('emptied', function() {
+            started = false;
+            progressMarks = VIDEO_PROGRESS_MARKS.slice();
+        });
+        // Once per load: pausing and resuming isn't a new start
+        video.addEventListener('play', function() {
+            if (started || !video.currentSrc) return;
+            started = true;
+            trackEvent('video_start', videoParams());
+        });
+        video.addEventListener('timeupdate', function() {
+            if (!video.duration || !video.currentTime) return;
+            const percent = video.currentTime / video.duration * 100;
+            while (progressMarks.length && percent >= progressMarks[0]) {
+                trackEvent('video_progress', videoParams({ video_percent: progressMarks.shift() }));
+            }
+        });
+        video.addEventListener('ended', function() {
+            trackEvent('video_complete', videoParams({ video_percent: 100 }));
+        });
     });
 });

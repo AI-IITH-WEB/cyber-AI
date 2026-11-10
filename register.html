@@ -39,6 +39,9 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-PLBRZSKP');</script>
     <!-- End Google Tag Manager -->
+  <!-- OpenAI Pixel -->
+  <script>!function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;var j=d.createElement(s);j.async=1;j.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j,f)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");oaiq("init",{pixelId:"D8nHwhhHMM34BQfMXRkJHV",debug:true});</script>
+  <!-- End OpenAI Pixel -->
   <!-- Meta Pixel Code -->
 <script>
   !function(f,b,e,v,n,t,s)
@@ -92,6 +95,14 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLBRZSKP"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <!-- Google Tag Manager (noscript) (GTM-NNLCB9RF) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NNLCB9RF"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) (GTM-NNLCB9RF) -->
+    <!-- Google Tag Manager (noscript) (GTM-M5X6STR5) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5X6STR5"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) (GTM-M5X6STR5) -->
   <div id="header-container"></div>
 
   <div class="form-wrapper">
@@ -128,13 +139,33 @@
         d.body.appendChild(s);
       }
 
+      // Tally posts the form's events here. main.js's trackTallyMessage records them (load, page views, submit) in
+      // Google Analytics, Tag Manager, the Meta Pixel and the OpenAI pixel, and on a submit calls goToThankYou once
+      // the conversion has been sent (at most ~1 s), so leaving the page doesn't cut it off. Without main.js the
+      // redirect still happens.
       window.addEventListener("message", function(e) {
         if (e.origin !== "https://tally.so" || typeof e.data !== "string") return;
+        var message;
         try {
-          if (JSON.parse(e.data).event === "Tally.FormSubmitted") {
-            window.location.href = "./thankyou.html";
-          }
-        } catch (err) {}
+          message = JSON.parse(e.data);
+        } catch (err) {
+          return;
+        }
+        if (!message || typeof message.event !== "string") return;
+
+        var isSubmit = message.event === "Tally.FormSubmitted";
+        var redirected = false;
+        function goToThankYou() {
+          if (redirected) return;
+          redirected = true;
+          window.location.href = "./thankyou.html";
+        }
+
+        if (typeof window.trackTallyMessage === "function") {
+          window.trackTallyMessage("register", message, goToThankYou);
+        } else if (isSubmit) {
+          goToThankYou();
+        }
       });
     </script>
   </div>

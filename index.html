@@ -36,16 +36,30 @@
          only the download of the vendor scripts waits until the visitor first interacts with the page (scroll, tap,
          click, key press, mouse move) or TAGS_FALLBACK_MS after the page has loaded, whichever comes first. The
          vendor scripts then process the queue, so no event is lost. This keeps ~1.5 MB of tag JavaScript out of the
-         page load (PageSpeed: Total Blocking Time, LCP). To load them immediately again, set TAGS_FALLBACK_MS = 0. -->
+         page load (PageSpeed: Total Blocking Time, LCP). To load them immediately again, set TAGS_FALLBACK_MS = 0.
+         Form submissions load them at once (loadTagsNow), and main.js holds a link click's navigation until they
+         have loaded (tagScriptsPending / whenTagScriptsLoaded, at most 1 s), so those events aren't lost either. -->
     <script>
     (function (w, d) {
         var TAGS_FALLBACK_MS = 5000;
         var queue = [], released = false;
+        // Google tag scripts injected but not yet loaded or failed, and callbacks waiting for them to settle
+        var googlePending = 0, waiting = [];
         var events = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'wheel', 'mousemove'];
+        function settle() {
+            if (--googlePending > 0) return;
+            var callbacks = waiting;
+            waiting = [];
+            callbacks.forEach(function (callback) { callback(); });
+        }
         function inject(src) {
             var s = d.createElement('script');
             s.async = true;
             s.src = src;
+            if (src.indexOf('https://www.googletagmanager.com/') === 0) {
+                googlePending++;
+                s.onload = s.onerror = settle;
+            }
             d.head.appendChild(s);
         }
         function release() {
@@ -57,8 +71,15 @@
         }
         // Used by the tag snippets below instead of inserting their <script> directly
         w.loadTagScript = function (src) { released ? inject(src) : queue.push(src); };
-        // Called by main.js when an enrollment is submitted, so the conversion is sent right away
+        // Called by main.js when a form is submitted, so the conversion is sent right away
         w.loadTagsNow = release;
+        // Used by main.js to hold a link's navigation until its click event can be sent: true until the Google
+        // tag scripts have been released and have each loaded or failed
+        w.tagScriptsPending = function () { return !released || googlePending > 0; };
+        w.whenTagScriptsLoaded = function (callback) {
+            release();
+            if (googlePending > 0) { waiting.push(callback); } else { callback(); }
+        };
         // Capture phase: also sees scrolls of <body>, which is this page's scroll container
         events.forEach(function (e) { w.addEventListener(e, release, { capture: true, passive: true }); });
         w.addEventListener('load', function () { setTimeout(release, TAGS_FALLBACK_MS); });
@@ -125,6 +146,14 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLBRZSKP"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <!-- Google Tag Manager (noscript) (GTM-NNLCB9RF) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NNLCB9RF"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) (GTM-NNLCB9RF) -->
+    <!-- Google Tag Manager (noscript) (GTM-M5X6STR5) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5X6STR5"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) (GTM-M5X6STR5) -->
     <header class="navbar">
         <div class="navcontainer">
             <a href="https://aicybercourse.ai.iith.ac.in"><img title="logo" src="assets/logo 1.svg" class="logo" width="275" height="71"></a>
