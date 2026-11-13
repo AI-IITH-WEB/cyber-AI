@@ -161,7 +161,8 @@
 **Why it was added:** the team saw visits but no enrollments. The enroll submit was a bare `dataLayer.push({event: 'enroll_form_submit'})`, which only GTM can see. GA4 is configured directly in each page's head (not through GTM), so it never got the enrollment, and the Meta / OpenAI pixels never got a conversion at all (only `PageView` / `init`).
 
 **How it works:** `trackEvent(name, params)` in `main.js` sends each event once as `gtag('event', name, params)`:
-- **GA4** `G-KWDYBFBBNX` records it directly.
+- **Google tag destinations** in `GOOGLE_EVENT_DESTINATIONS` record it directly: GA4 `G-KWDYBFBBNX` + `G-E0T405F2ZL` (both in the page's Google tag), GA4 `G-CLYZCFNBFQ` (GTM-M5X6STR5), Google Ads `AW-18552371374` (GTM-NNLCB9RF). The list is passed as `send_to` and must stay explicit — see the fix log below.
+- **Google Ads enrollment conversion** `AW-16872666808/vgJKCIH37c0aELjtwe0-` is sent with `enroll_form_submit` (`AD_PIXEL_EVENTS.googleAds`). GTM-PLBRZSKP fires it only on a `thankyou-enroll` page load, which the in-modal thank-you never triggers.
 - **GTM** (`GTM-PLBRZSKP`, `GTM-NNLCB9RF`, `GTM-M5X6STR5`) sees it as a **Custom Event** with the same name. Parameters are Data Layer Variables `eventModel.<param>` (e.g. `eventModel.form_name`).
 - **Meta Pixel** / **OpenAI pixel** get the events listed in `AD_PIXEL_EVENTS` (same event ID on both, for a future Conversions API). The OpenAI pixel is on index, about, terms and register (the pages with a form).
 - No personal data is ever sent. The Tally submit payload holds the answers; only `form_id` / `form_name` go out. mailto addresses aren't sent.
@@ -198,6 +199,11 @@
 3. **GTM:** if any container already has a GA4 Event tag that forwards `enroll_form_submit` to `G-KWDYBFBBNX`, pause it, because GA4 now gets the event directly. Google Ads / other conversion tags can keep the same Custom Event trigger.
 4. **Meta Events Manager:** `Lead` and `CompleteRegistration` arrive as standard events. Check `register.html`'s Tally embed (`formEventsForwarding=1`, Tally's "Track form events") isn't also sending a registration event to the pixel.
 5. **OpenAI pixel:** every snippet has `debug: true` (as first pasted). Set it to `false` once conversions show in OpenAI Ads Manager.
+
+**Fix log (2026-11-13), "nothing is recorded after the enroll thank-you":** verified in Chrome against every GA4/Ads/Meta/OpenAI request. All hits were answered locally, so none reached the real properties.
+- **Cause:** GTM-PLBRZSKP contains its own Google tag for `G-KWDYBFBBNX`. Once it loads, `gtag('event')` calls without `send_to` stop reaching `G-KWDYBFBBNX` and `G-E0T405F2ZL`, and go only to `G-CLYZCFNBFQ` and `AW-18552371374`. Every `main.js` event (modal, enroll submit, thank-you, close, scroll, clicks) was therefore missing from GA4 `G-KWDYBFBBNX`. That property saw only `page_view`, `scroll` and GTM's link-click events. Blocking GTM-PLBRZSKP made all the events arrive, which confirmed the cause. **Fix:** `send_to: GOOGLE_EVENT_DESTINATIONS` on every event.
+- The Google Ads enrollment conversion (GTM-PLBRZSKP, trigger "URL contains thankyou-enroll") had not fired since the enroll modal replaced the redirect to `thankyou-enroll.html`. **Fix:** it is now sent from `main.js` (see above).
+- **Still to do in GTM-PLBRZSKP (dashboard, not code):** (a) LinkedIn Insight `6946844` conversion and the GA4 "Page Path" event are also bound to `thankyou` page loads, so they never see a modal enrollment. Move them to a Custom Event trigger `enroll_form_submit`. If the Ads conversion is moved the same way, remove `googleAds` from `AD_PIXEL_EVENTS`. (b) A GA4 Event tag named `{{Click Text}}` fires on every page load and sends an event literally named `undefined`. (c) Two GA4 Event tags named `{{Click Text}}` both fire on `ai.iith.ac.in` links, which sends duplicate free-text events (`Course Offerings`, `Download Brochure`). (d) The GA4 Event tag named `{{Page Path}}` (e.g. `/thankyou.html`) is not a valid GA4 event name. Pause or rename (b)–(d); `main.js` already sends `nav_click`, `link_click`, `brochure_download` and `*_thankyou_view`.
 
 ---
 

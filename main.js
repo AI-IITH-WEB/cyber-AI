@@ -14,7 +14,7 @@ function toggleMenu() {
 }
 
 // Analytics — every event is sent as one Google tag event, gtag('event', name, params), which reaches:
-// - Google Analytics 4 (G-KWDYBFBBNX, configured in each page's head), where it is recorded as-is;
+// - the Google tag destinations in GOOGLE_EVENT_DESTINATIONS, where it is recorded as-is;
 // - each Google Tag Manager container (GTM-PLBRZSKP, GTM-NNLCB9RF, GTM-M5X6STR5), where it is a Custom Event of
 //   the same name, its parameters readable with Data Layer Variables named "eventModel.<param>".
 // The events ad campaigns optimise for are also sent to the Meta Pixel and the OpenAI Ads pixel (AD_PIXEL_EVENTS).
@@ -25,11 +25,25 @@ function toggleMenu() {
 const ANALYTICS_CALLBACK_TIMEOUT_MS = 1000;
 const ANALYTICS_DEBUG_KEY = 'analyticsDebug';
 
-// GA4 event name → Meta Pixel event ([fbq method, event name]) and/or OpenAI Ads pixel standard event.
+// Where every event goes (send_to). The list must be explicit: GTM-PLBRZSKP loads its own Google tag for
+// G-KWDYBFBBNX, and once it has, an event without send_to no longer reaches G-KWDYBFBBNX or G-E0T405F2ZL (the
+// second GA4 property in that same Google tag) — only the destinations the other two containers add. That is why
+// GA4 recorded none of the enroll, thank-you or later events. Add a destination here when a new GA4 property or
+// Google Ads account is put on the site.
+// - G-KWDYBFBBNX + G-E0T405F2ZL: the Google tag in each page's head (and in GTM-PLBRZSKP)
+// - G-CLYZCFNBFQ: GA4 property of GTM-M5X6STR5
+// - AW-18552371374: Google Ads account of GTM-NNLCB9RF (received every event before this list existed)
+const GOOGLE_EVENT_DESTINATIONS = ['G-KWDYBFBBNX', 'G-E0T405F2ZL', 'G-CLYZCFNBFQ', 'AW-18552371374'];
+
+// GA4 event name → Meta Pixel event ([fbq method, event name]), OpenAI Ads pixel standard event and/or Google Ads
+// conversion (send_to "AW-<account>/<label>").
 // Meta standard events (track) feed ad optimisation; trackCustom ones are for custom audiences and conversions.
-// Both pixels get the same event ID, ready for de-duplication if a server-side Conversions API is added later.
+// All pixels get the same event ID, ready for de-duplication if a server-side Conversions API is added later.
+// The enrollment's Google Ads conversion is the one GTM-PLBRZSKP fires on page loads whose URL contains
+// "thankyou-enroll". The Enroll modal shows its thank-you in place and never loads that page, so it's sent from
+// here instead. If GTM gets a trigger on the enroll_form_submit event for it, remove googleAds below — not both.
 const AD_PIXEL_EVENTS = {
-    enroll_form_submit: { meta: ['track', 'Lead'], openai: 'lead_created' },
+    enroll_form_submit: { meta: ['track', 'Lead'], openai: 'lead_created', googleAds: 'AW-16872666808/vgJKCIH37c0aELjtwe0-' },
     register_form_submit: { meta: ['track', 'CompleteRegistration'], openai: 'registration_completed' },
     enroll_modal_open: { meta: ['trackCustom', 'EnrollModalOpen'] },
     cta_click: { meta: ['trackCustom', 'CTAClick'] },
@@ -84,6 +98,9 @@ function sendToAdPixels(name, params) {
         if (pixel.openai && typeof window.oaiq === 'function') {
             window.oaiq('measure', pixel.openai, { type: 'customer_action' }, { event_id: eventId });
         }
+        if (pixel.googleAds) {
+            gtagPush('event', 'conversion', { send_to: pixel.googleAds, transaction_id: eventId });
+        }
     } catch (err) {
         // A pixel failing must never break the page or the Google events
         console.error('Analytics: ad pixel event failed.', err);
@@ -95,6 +112,7 @@ function sendToAdPixels(name, params) {
 function trackEvent(name, params, callback) {
     const data = cleanEventParams(params);
     sendToAdPixels(name, data);
+    data.send_to = GOOGLE_EVENT_DESTINATIONS;
     if (analyticsDebug) {
         data.debug_mode = true;
         console.info('[analytics]', name, data);
